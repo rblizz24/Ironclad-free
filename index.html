@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Ironclad Free: Battle Tank</title>
+<meta name="description" content="Ironclad Free: the top-down tank roguelike in your browser. Endless mode on the Verdant Front with the Ironclad and the Hound.">
+<meta name="theme-color" content="#14110E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ironclad Free">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: #0b0a08; color: #a99178;
+    font: 14px/1.4 system-ui, sans-serif;
+    overscroll-behavior: none; touch-action: none;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body { display: flex; justify-content: center; align-items: flex-start; }
+  #game { display: block; touch-action: none; background: #14110E; outline: none; }
+  #fail {
+    display: none; position: fixed; inset: 0; padding: 24px; box-sizing: border-box;
+    background: #14110E; color: #dcccaf; text-align: center;
+    flex-direction: column; justify-content: center; gap: 12px;
+  }
+  #fail.show { display: flex; }
+  #fail h1 { margin: 0; font-size: 22px; letter-spacing: 0.04em; }
+  #fail p { margin: 0; color: #a99178; }
+</style>
+</head>
+<body>
+<canvas id="game" tabindex="0" aria-label="Ironclad game"></canvas>
+<div id="fail" role="alert">
+  <h1>IRONCLAD COULDN'T START</h1>
+  <p id="failwhy">This browser couldn't run the game. Try an up-to-date Chrome, Safari, Firefox or Edge.</p>
+</div>
+<script src="ironclad.js"></script>
+<script src="classes.js"></script>
+<script>
+  (function () {
+    function fail(why) {
+      document.getElementById('failwhy').textContent = why;
+      document.getElementById('fail').classList.add('show');
+      if (window.IC) IC.log('fail: ' + why);
+    }
+    window.addEventListener('load', function () {
+      if (typeof main !== 'function') { fail('The game code (classes.js) did not load.'); return; }
+      try { main(); } catch (e) { fail('Start-up error: ' + (e && e.message ? e.message : e)); }
+    });
+  })();
+</script>
+</body>
+</html>
