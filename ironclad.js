@@ -386,6 +386,16 @@
     try { return new URLSearchParams(window.location.search).has(name); } catch (e) { return false; }
   };
   IC.vibrate = function (ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { /* not allowed */ } };
+  IC.copyText = function (text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).catch(function () { }); return; }
+    } catch (e) { /* fall through */ }
+    try {
+      const t = document.createElement('textarea');
+      t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t);
+    } catch (e) { /* no clipboard */ }
+  };
   IC.openUrl = function (url) { try { window.open(url, '_blank', 'noopener'); } catch (e) { /* popup blocked */ } };
 
   // ------------------------------------------------------------------ input
@@ -434,7 +444,9 @@
     canvas.addEventListener('pointerup', function (e) { e.preventDefault(); sendTouch(2, e); });
     canvas.addEventListener('pointercancel', function (e) { sendTouch(3, e); });
     canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    installKeyboard();
     window.addEventListener('keydown', function (e) {
+      if (e.target === kb) return;      // typing in the seed box
       if (e.key === 'Escape' || e.key === 'Backspace' || e.key === 'p' || e.key === 'P') {
         e.preventDefault();
         if (backFn) backFn();
@@ -456,6 +468,63 @@
       lastT = 0;
     });
   }
+
+  // ---- the seed box: a real (invisible) text input laid over the game's box, so phones bring up their keyboard.
+  // The input is the source of truth while open; the game reads it each frame, formats it and writes it back.
+  let kb = null, kbWanted = false, kbRect = null, kbText = null, kbEnter = false;
+
+  function installKeyboard() {
+    kb = document.createElement('input');
+    kb.type = 'text';
+    kb.setAttribute('autocapitalize', 'characters');
+    kb.setAttribute('autocomplete', 'off');
+    kb.setAttribute('autocorrect', 'off');
+    kb.setAttribute('spellcheck', 'false');
+    kb.setAttribute('enterkeyhint', 'done');
+    kb.setAttribute('aria-label', 'Seed');
+    kb.maxLength = 12;
+    kb.style.cssText = 'position:fixed;display:none;opacity:0.01;font-size:16px;border:0;padding:0;margin:0;'
+      + 'background:transparent;color:transparent;caret-color:transparent;outline:none;z-index:5;';
+    document.body.appendChild(kb);
+    kb.addEventListener('input', function () { kbText = kb.value; });
+    kb.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+      if (e.key === 'Enter') { e.preventDefault(); kbEnter = true; }
+      else if (e.key === 'Escape') { e.preventDefault(); kb.blur(); if (backFn) backFn(); }
+    });
+  }
+
+  function placeKeyboard() {
+    if (!kb) return;
+    if (!kbWanted || !kbRect) { kb.style.display = 'none'; return; }
+    const r = canvas.getBoundingClientRect();
+    kb.style.display = 'block';
+    kb.style.left = (r.left + kbRect[0] * scale) + 'px';
+    kb.style.top = (r.top + kbRect[1] * scale) + 'px';
+    kb.style.width = (kbRect[2] * scale) + 'px';
+    kb.style.height = (kbRect[3] * scale) + 'px';
+  }
+
+  IC.keyboard = function (show, text) {
+    kbWanted = show;
+    if (!kb) return;
+    if (show) {
+      kb.value = text;
+      placeKeyboard();
+      try { kb.focus({ preventScroll: true }); } catch (e) { /* needs a tap on iOS: the box itself */ }
+    } else {
+      kbRect = null;
+      placeKeyboard();
+      kb.blur();
+    }
+  };
+  IC.keyboardText = function (text) { if (kb && kb.value !== text) kb.value = text; };
+  IC.textField = function (x, y, w, h) {
+    if (!kbRect || kbRect[0] !== x || kbRect[1] !== y || kbRect[2] !== w || kbRect[3] !== h) { kbRect = [x, y, w, h]; placeKeyboard(); }
+  };
+  IC.hasText = function () { return kbText !== null; };
+  IC.takeText = function () { const t = kbText; kbText = null; return t === null ? '' : t; };
+  IC.takeEnter = function () { const e = kbEnter; kbEnter = false; return e; };
 
   IC.onTouch = function (fn) { touchFn = fn; };
   IC.onBack = function (fn) { backFn = fn; };
