@@ -12,7 +12,7 @@
   const MAX_BACKING_W = 1280;       // sprites are drawn for 1080 px across; more pixels only cost fill rate
   // the Android build's SharedPreferences file name, as a key prefix. The browser version is the free edition and
   // every site under rblizz24.github.io shares one localStorage, so it keeps its own save beside the old full one.
-  const STORE = 'projectmtb.free.';
+  const STORE = 'ironcladbattletank.free.';
   const FONT_FILES = ['BebasNeue.otf', 'Play-Bold.ttf', 'Play-Regular.ttf', 'AlfaSlabOne.ttf'];
   const FONT_FALLBACK = ['Impact, sans-serif', 'sans-serif', 'sans-serif', 'Georgia, serif'];
 
@@ -67,12 +67,16 @@
 
   let m = [1, 0, 0, 1, 0, 0];
   const stack = [];
+  // per save level, how many ctx.save()s clipCircle made inside it (a canvas clip only comes off with ctx.restore())
+  const clips = [];
   let ctxDirty = true;
 
   function resetTransform() {
     const k = scale * backing;
     m = [k, 0, 0, k, 0, 0];
     stack.length = 0;
+    for (const n of clips) for (let i = 0; i < n; i++) ctx.restore();
+    clips.length = 0;
     ctxDirty = true;
   }
 
@@ -83,8 +87,24 @@
     }
   }
 
-  IC.save = function () { stack.push(m.slice()); };
-  IC.restore = function () { if (stack.length) { m = stack.pop(); ctxDirty = true; } };
+  IC.save = function () { stack.push(m.slice()); clips.push(0); };
+  IC.restore = function () {
+    if (stack.length) {
+      m = stack.pop();
+      for (let n = clips.pop(); n > 0; n--) ctx.restore();
+      ctxDirty = true;
+    }
+  };
+  /** Gfx.clipCircle: narrow drawing to a circle until the matching restore (only between save and restore). */
+  IC.clipCircle = function (x, y, r) {
+    if (!clips.length) return;
+    applyM();
+    ctx.save();
+    clips[clips.length - 1]++;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+  };
   IC.translate = function (x, y) {
     m[4] += m[0] * x + m[2] * y;
     m[5] += m[1] * x + m[3] * y;
@@ -114,6 +134,51 @@
     ctx.setTransform(a * sx, b * sx, c * sy, d * sy, e, f);
     ctxDirty = true;
   }
+
+  // ------------------------------------------------------------------ night light map (Gfx.beginLight)
+  // Drawing goes into a small offscreen canvas filled with the ambient colour, with additive ('lighter') blending;
+  // lightEnd multiplies it over the frame.
+
+  let lightCanvas = null, screenCtx = null, screenM = null, screenStack = null;
+  IC.lightBegin = function (ambient, res) {
+    if (screenCtx) return;
+    const w = Math.max(1, Math.round(logicalW * res)), h = Math.max(1, Math.round(logicalH * res));
+    if (!lightCanvas) lightCanvas = document.createElement('canvas');
+    if (lightCanvas.width !== w || lightCanvas.height !== h) { lightCanvas.width = w; lightCanvas.height = h; }
+    screenCtx = ctx;
+    screenM = m.slice();
+    screenStack = stack.slice();
+    ctx = lightCanvas.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = col((ambient | 0xFF000000) >>> 0);
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    m = [w / logicalW, 0, 0, h / logicalH, 0, 0];
+    stack.length = 0;
+    ctxDirty = true;
+  };
+  IC.lightAdd = function (add) {
+    if (screenCtx) ctx.globalCompositeOperation = add ? 'lighter' : 'source-over';
+  };
+  IC.lightEnd = function () {
+    if (!screenCtx) return;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx = screenCtx;
+    screenCtx = null;
+    m = screenM;
+    stack.length = 0;
+    for (let i = 0; i < screenStack.length; i++) stack.push(screenStack[i]);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.globalAlpha = 1;
+    ctx.drawImage(lightCanvas, 0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = 'source-over';
+    ctxDirty = true;
+  };
 
   // ------------------------------------------------------------------ colours
 
@@ -246,6 +311,20 @@
     ctx.globalAlpha = 1;
   };
 
+  // part of a sprite (u, v as fractions of its size): a ground tile cut off where its fill ends
+  IC.sprSub = function (h, u0, v0, u1, v1, x, y, w, hh, alpha) {
+    if (!(alpha > 0.003)) return;
+    const im = imageOf(h);
+    if (!im) return;
+    const iw = im.width, ih = im.height;
+    const sx = Math.round(u0 * iw), sy = Math.round(v0 * ih);
+    const sw = Math.max(1, Math.round(u1 * iw) - sx), sh = Math.max(1, Math.round(v1 * ih) - sy);
+    applyM();
+    ctx.globalAlpha = alpha >= 1 ? 1 : alpha;
+    ctx.drawImage(im, sx, sy, sw, sh, x, y, w, hh);
+    ctx.globalAlpha = 1;
+  };
+
   // ------------------------------------------------------------------ shapes
 
   function roundRectPath(x, y, w, h, r) {
@@ -373,6 +452,23 @@
   // ------------------------------------------------------------------ storage and device
 
   const memoryStore = new Map();   // when localStorage is blocked (private mode, sandboxed previews)
+  // the free site's saves were kept under 'projectmtb.free.' before the rename: carry them over once, so an update
+  // doesn't start anyone from scratch (only if nothing has been saved under the new name yet)
+  (function migrateOldSave() {
+    const OLD = 'projectmtb.free.';
+    try {
+      const ls = window.localStorage;
+      let fresh = true;
+      const old = [];
+      for (let i = 0; i < ls.length; i++) {
+        const key = ls.key(i);
+        if (key === null) continue;
+        if (key.indexOf(STORE) === 0) fresh = false;
+        else if (key.indexOf(OLD) === 0) old.push(key);
+      }
+      if (fresh) for (const key of old) ls.setItem(STORE + key.substring(OLD.length), ls.getItem(key));
+    } catch (e) { /* storage blocked: nothing to carry over */ }
+  })();
   IC.shas = function (k) {
     try { return window.localStorage.getItem(STORE + k) !== null; } catch (e) { return memoryStore.has(k); }
   };
