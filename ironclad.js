@@ -1188,7 +1188,7 @@
   const vF32 = new Float32Array(vBuf), vU32 = new Uint32Array(vBuf);
   const iBuf = new Uint16Array(MAXI);
   let nV = 0, nI = 0;
-  let uRes = null, uFlip = null, uClip = null, whiteTex = null;
+  let uRes = null, uFlip = null, uClip = null, whiteTex = null, glProg = null, glVao = null;
   const unitTex = [null, null, null, null, null, null, null, null];
   let unitsUsed = 0, nextUnit = 0;        // bit i: this batch samples unit i
   let blend = 0;                          // 0 over, 1 add ('lighter'), 2 multiply
@@ -1198,6 +1198,9 @@
   let recording = null;                   // a bake's calls, kept to draw it again if the GPU drops its pictures
   const glStats = { draws: 0, uploads: 0, atlasResets: 0, mb: 0 };
   IC.renderer = function () { return gl ? 'webgl2' : 'canvas'; };
+  // (the canvas renderer has no warp: the battlefield is drawn flat and the units scaled by the ground instead)
+  IC.warpBegin = function () { return false; };
+  IC.warpEnd = function () { };
   IC.glStats = function (area) {
     glStats.mb = Math.round(texBytes / 1048576);
     const s = Object.assign({}, glStats);
@@ -1278,12 +1281,14 @@ void main() {
     gl.linkProgram(p);
     if (!gl.getProgramParameter(p, gl.LINK_STATUS) && !gl.isContextLost()) throw new Error(gl.getProgramInfoLog(p));
     gl.useProgram(p);
+    glProg = p;
     uRes = gl.getUniformLocation(p, 'uRes');
     uFlip = gl.getUniformLocation(p, 'uFlip');
     uClip = gl.getUniformLocation(p, 'uClip');
     for (let i = 0; i < UNITS; i++) gl.uniform1i(gl.getUniformLocation(p, 'uT' + i), i);
     gl.uniform1i(uClip, 0);
-    gl.bindVertexArray(gl.createVertexArray());
+    glVao = gl.createVertexArray();
+    gl.bindVertexArray(glVao);
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     const S = GLV * 4;
     gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, S, 0);
@@ -1312,6 +1317,7 @@ void main() {
     screenTgt.gen = glGen;
     tgt = null;
     gtargets.length = 0;
+    warpSetup();
     useTarget(screenTgt);
   }
 
@@ -1591,6 +1597,7 @@ void main() {
 
   function glFrameStart() {
     while (gtargets.length) glPop();     // (a frame that failed halfway)
+    warpRec = null;
     if (++glFrame % 60 === 0) evict();
     recording = null;
     screenTgt.w = canvas.width;
@@ -2067,6 +2074,191 @@ void main() {
     devQuad(0, 0, tgt.w, tgt.h, 0, 0, 1, 1, gc(1, 1), mode);
     setBlend(r.blend);
   };
+
+  // ---- the camera's perspective on the hills (core.Warp; on the phone game.WarpShader, the same search step for
+  // step): the battlefield is drawn into a picture the screen's size, then laid on the screen through the warp, each
+  // pixel taking its colour from the ground point shown there. Its heights are the frame's own (Warp.eff: the ground's
+  // over the camera's, the units' pads in), a little picture made again each frame.
+  const GL_WARP_VS = `#version 300 es
+void main() {
+  gl_Position = vec4(gl_VertexID == 1 ? 3.0 : -1.0, gl_VertexID == 2 ? 3.0 : -1.0, 0.0, 1.0);
+}`;
+  const WARP_STEPS = 5, WARP_MARCH = 3;     // (core.Warp.GROUND_STEPS, GROUND_MARCH)
+  const GL_WARP_FS = `#version 300 es
+precision highp float;
+uniform sampler2D uContent, uEff;
+uniform vec2 uSize, uOrigin, uC, uGridO, uGridN;
+uniform float uK, uHi, uCam, uGain, uGridK;
+out vec4 o;
+float lift(vec2 w) {
+  float h = texture(uEff, (w - uGridO) * uGridK / uGridN).r * uHi;
+  return (uCam / (uCam - h) - 1.0) * uGain;
+}
+void main() {
+  vec2 p = vec2(gl_FragCoord.x, uSize.y - gl_FragCoord.y);
+  vec2 s = uOrigin + p * uK;
+  vec2 d = s - uC;
+  float ts = length(d);
+  vec2 g = s;
+  if (ts > 0.001) {
+    vec2 u = d / ts;
+    float tlo = ts / (1.0 + (uCam / (uCam - uHi) - 1.0) * uGain), thi = ts;
+    float a = tlo, fa = a * (1.0 + lift(uC + u * a)) - ts;
+    float b = thi, fb = b * (1.0 + lift(uC + u * b)) - ts;
+    bool found = false;
+    int side = 0;
+    for (int k = 0; k < ${WARP_STEPS}; k++) {
+      bool march = !found && k < ${WARP_MARCH};
+      float t = march ? tlo + (thi - tlo) * float(k + 1) / ${WARP_MARCH + 1}.0
+                      : (fb - fa > 0.0001 ? a - fa * (b - a) / (fb - fa) : 0.5 * (a + b));
+      float v = t * (1.0 + lift(uC + u * t)) - ts;
+      if (v >= 0.0) {
+        b = t; fb = v;
+        if (!march && side > 0) fa *= 0.5;
+        side = march ? 0 : 1;
+        found = true;
+      } else {
+        a = t; fa = v;
+        if (!march && side < 0) fb *= 0.5;
+        side = march ? 0 : -1;
+      }
+    }
+    float tt = fb - fa > 0.0001 ? a - fa * (b - a) / (fb - fa) : b;
+    g = uC + u * tt;
+  }
+  o = texture(uContent, (g - uOrigin) / uK / uSize);
+}`;
+  const PIC_UNIT = 10, EFF_UNIT = 9;      // (past the batches' 8 and the upload unit)
+  let warpProg = null, warpVao = null, warpU = null, effTex = null, effBytes = null, warpT = null, warpRec = null;
+  let warpMs = null;                      // drawn into with the screen's own smoothing (multisampled), then resolved
+  /** A w x h multisampled picture to draw into (colour and stencil), the old one if it still fits; null where the GPU
+   *  can't (the battlefield is then drawn straight into warpT). */
+  function msTarget(w, h, old) {
+    if (old && old.gen === glGen) {
+      if (old.w === w && old.h === h) return old;
+      flush();
+      gl.deleteFramebuffer(old.fb); gl.deleteRenderbuffer(old.cb); gl.deleteRenderbuffer(old.sb);
+    }
+    const samples = Math.min(4, gl.getParameter(gl.MAX_SAMPLES) || 0);
+    if (samples < 2 || IC.query('noaa')) return null;
+    const fb = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    const cb = gl.createRenderbuffer();
+    gl.bindRenderbuffer(gl.RENDERBUFFER, cb);
+    gl.renderbufferStorageMultisample(gl.RENDERBUFFER, samples, gl.RGBA8, w, h);
+    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, cb);
+    const sb = gl.createRenderbuffer();
+    gl.bindRenderbuffer(gl.RENDERBUFFER, sb);
+    gl.renderbufferStorageMultisample(gl.RENDERBUFFER, samples, gl.DEPTH24_STENCIL8, w, h);
+    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, sb);
+    const ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, tgt ? tgt.fb : null);
+    if (!ok) {
+      gl.deleteFramebuffer(fb); gl.deleteRenderbuffer(cb); gl.deleteRenderbuffer(sb);
+      return null;
+    }
+    return { fb: fb, tex: null, cb: cb, w: w, h: h, depth: 0, sb: sb, gen: glGen };
+  }
+  /** The warp's program, at start and when a lost context comes back; the batches' own left in use. Without it the
+   *  battlefield is drawn flat (warpBegin false). */
+  function warpSetup() {
+    warpProg = null;
+    warpT = null;
+    warpMs = null;
+    warpRec = null;
+    try {
+      const p = gl.createProgram();
+      gl.attachShader(p, glShader(gl.VERTEX_SHADER, GL_WARP_VS));
+      gl.attachShader(p, glShader(gl.FRAGMENT_SHADER, GL_WARP_FS));
+      gl.linkProgram(p);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+      gl.useProgram(p);
+      warpU = {};
+      ['uSize', 'uOrigin', 'uC', 'uGridO', 'uGridN', 'uK', 'uHi', 'uCam', 'uGain', 'uGridK'].forEach(function (n) {
+        warpU[n] = gl.getUniformLocation(p, n);
+      });
+      gl.uniform1i(gl.getUniformLocation(p, 'uContent'), PIC_UNIT);
+      gl.uniform1i(gl.getUniformLocation(p, 'uEff'), EFF_UNIT);
+      warpVao = gl.createVertexArray();
+      effTex = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE0 + EFF_UNIT);
+      gl.bindTexture(gl.TEXTURE_2D, effTex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      warpProg = p;
+    } catch (err) {
+      IC.log('warp shader unavailable: ' + err);
+      warpProg = null;
+    }
+    gl.useProgram(glProg);
+    gl.bindVertexArray(glVao);
+  }
+  IC.warpOn = function () { return !!(gl && warpProg); };
+  G.warpBegin = function () {
+    if (!warpProg || glLost || warpRec || gtargets.length) return false;
+    warpT = fbTarget(tgt.w, tgt.h, warpT);
+    warpMs = msTarget(tgt.w, tgt.h, warpMs);
+    glPush(warpMs || warpT, m.slice());
+    warpRec = gtargets[gtargets.length - 1];
+    clearTarget(0, 0, 0, 1);
+    return true;
+  };
+  /** The battlefield laid on the screen: (ox, oy) the world point at its picture's corner, k world units a pixel,
+   *  (cx, cy) the camera's middle; the frame's heights gw x gh cells from (gox, goy), gk cells a unit, 0..hi as the
+   *  characters of data (0..255). */
+  G.warpEnd = function (ox, oy, k, cx, cy, hi, cam, gain, gox, goy, gk, gw, gh, data) {
+    if (!warpRec) return;
+    while (gtargets.length && gtargets[gtargets.length - 1] !== warpRec) glPop();
+    const r = glPop();
+    warpRec = null;
+    flush();
+    if (warpMs) {
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, warpMs.fb);
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, warpT.fb);
+      gl.blitFramebuffer(0, 0, warpT.w, warpT.h, 0, 0, warpT.w, warpT.h, gl.COLOR_BUFFER_BIT, gl.NEAREST);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, tgt.fb);
+    }
+    const n = gw * gh;
+    if (!effBytes || effBytes.length !== n) effBytes = new Uint8Array(n);
+    for (let i = 0; i < n; i++) effBytes[i] = data.charCodeAt(i);
+    gl.activeTexture(gl.TEXTURE0 + EFF_UNIT);
+    gl.bindTexture(gl.TEXTURE_2D, effTex);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, gw, gh, 0, gl.RED, gl.UNSIGNED_BYTE, effBytes);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+    gl.activeTexture(gl.TEXTURE0 + PIC_UNIT);
+    gl.bindTexture(gl.TEXTURE_2D, warpT.tex);
+    gl.useProgram(warpProg);
+    gl.uniform2f(warpU.uSize, tgt.w, tgt.h);
+    gl.uniform2f(warpU.uOrigin, ox, oy);
+    gl.uniform1f(warpU.uK, k);
+    gl.uniform2f(warpU.uC, cx, cy);
+    gl.uniform1f(warpU.uHi, hi);
+    gl.uniform1f(warpU.uCam, cam);
+    gl.uniform1f(warpU.uGain, gain);
+    gl.uniform2f(warpU.uGridO, gox, goy);
+    gl.uniform1f(warpU.uGridK, gk);
+    gl.uniform2f(warpU.uGridN, gw, gh);
+    gl.disable(gl.BLEND);
+    gl.disable(gl.STENCIL_TEST);
+    gl.bindVertexArray(warpVao);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    glStats.draws++;
+    gl.bindTexture(gl.TEXTURE_2D, null);     // (the picture is drawn into again next frame: never left bound)
+    gl.useProgram(glProg);
+    gl.bindVertexArray(glVao);
+    gl.enable(gl.BLEND);
+    applyStencil();
+    setBlend(r.blend);
+  };
+  // where a point (and a length) is drawn, in the target's pixels: the warp keeps text drawn into it whole
+  IC.devX = function (x, y) { return m[0] * x + m[2] * y + m[4]; };
+  IC.devY = function (x, y) { return m[1] * x + m[3] * y + m[5]; };
+  IC.devR = function (r) { return r * Math.sqrt(Math.abs(m[0] * m[3] - m[1] * m[2])); };
 
   /** WebGL 2 on the page's canvas, the IC calls turned over to it. False if this browser can't. */
   function installGL() {
