@@ -1,0 +1,260 @@
+# blackcoast: written by tools/levels/make_layouts.py (edit there, or here by hand)
+size 112 168
+cell 32
+edge rock
+floor t_concrete
+pad 25 63 54 81
+pad 16 57 27 58
+pad 28 29 41 34
+pad 17 29 30 30
+pad 30 146 43 152
+pad 19 145 32 146
+pad 19 152 32 153
+building d 47 64 50 67
+building c 45 75 52 79
+building d 46 106 48 108
+building d 52 103 54 105
+building d 57 113 59 115
+building d 48 118 50 120
+building d 54 123 56 125
+building d 43 113 45 115
+trench 49 26 49 34
+trench 58 81 64 81
+static
+prop crate 44.72 59.61 0
+prop crate 45.77 59.61 0
+prop crate 46.82 59.61 0
+prop crate 47.88 59.61 0
+prop crate 44.72 60.66 0
+prop crate 45.77 60.66 0
+prop crate 46.82 60.66 0
+prop crate 47.88 60.66 0
+prop crate 44.72 61.71 0
+prop crate 45.77 61.71 0
+prop crate 46.82 61.71 0
+prop crate 47.88 61.71 0
+prop barrel 51.88 65.34 0
+prop barrel 52.82 65.34 0
+prop barrel 53.77 65.34 0
+prop barrel 54.72 65.34 0
+prop barrel 51.88 66.29 0
+prop barrel 52.82 66.29 0
+prop barrel 53.77 66.29 0
+prop barrel 54.72 66.29 0
+prop crate 45.65 148.50 0
+prop crate 46.70 148.50 0
+prop crate 47.75 148.50 0
+prop crate 45.65 149.55 0
+prop crate 46.70 149.55 0
+prop crate 47.75 149.55 0
+prop barrel 46.23 152.59 0
+prop barrel 47.18 152.59 0
+prop barrel 46.23 153.53 0
+prop barrel 47.18 153.53 0
+prop hedgehog 56.42 101.26 0
+prop hedgehog 56.42 102.96 0
+prop hedgehog 56.42 104.66 0
+prop hedgehog 56.42 106.36 0
+prop hedgehog 56.42 108.06 0
+prop sandbag 55.50 39.65 90
+prop sandbag 57.74 132.05 90
+prop tent 71.94 78.18 0
+prop tent 75.14 78.18 0
+start 62 149
+evac 55 25
+boss 53 57
+poi 90 31 COASTAL BATTERY
+poi 45 67 HARBOUR
+poi 91 104 CLIFF BUNKERS
+poi 64 70 BEACH HEADQUARTERS
+poi 51 114 FISHING VILLAGE
+beacon 101 70
+beacon 98 152
+beacon 78 13
+beacon 43 21
+beacon 80 99
+beacon 44 153
+find 101 70
+find 98 152
+find 78 13
+prop x_sigmast 61.70 59.98 0
+prop x_hcrane 53.30 65.82 0
+prop x_landingcraft 41.86 143.02 0
+prop x_rangefinder 92.70 101.30 0
+prop x_navalgun 82.50 34.10 0
+prop x_navalgun 93.58 41.50 0
+prop x_mines 45.10 55.70 0
+prop x_mines 45.10 57.40 0
+prop x_searchlight 36.90 37.46 0
+prop x_searchlight 86.86 96.26 0
+prop x_boats 44.46 147.34 0
+prop x_boats 44.46 149.14 0
+grid
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww############################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###################################....###################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###################################.........##############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##################################............############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##################################............############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##################################............############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#################################.............############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww################################.............#############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###############################..............#############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#############################...............##############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww############################...............###############################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~#################.................................########################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~############................................../.......####################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..###.......................................///^////.....##################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........................................//^^^^^^^^//.....################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~........................................./^^^^^^^^^^^^//....###############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~......................................../^^^^^^^^^^^^^^^/....##############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~......................................./^^^^^^^^^^^////////...#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~......................................./^^^^^^^^^^/++++++/^/...############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~......................................./^^^^^^^^^^/++++++++/^/..############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~......................................./^^^^^^^^^/+++++++++/^^/...##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~.H..................................../^^^^^^^^^^/++++++++++/^^/...#########
+wwwwwwwwwwwwwwwww........................................................./^^^^^^^^^/+++++++++++/^^^/...########
+wwwwwwwwwwwwwwwww....................................,..................../^^^^^^^^^/+++++++++++/^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwww........................,,,.................../^^^^^^^^^/+++++++++++/^^^^^/.########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww........................,,,................../^^^^^^^^^^/+++++++++++/^^^^^^/########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww.........H..............,,,................../^^^^^^^^^^^/+++++++++/^^^^^^^/########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww.........................,,,................./^^^^^^^^^^^/++++++++/^^^^^^^/#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~....................,,,................./^^^^^^^^^^^/++++++++/^^^^^^^/#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~....................,,,................../^^^^^^^^^^^/++++++/^^^^^^^^/#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~....................,,,................../^^^^^^^^^^^//+++//^^^^^^^^^^/########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~##..................,,,.................../^^^^^^^^^^^^///^^^^^^^^^^^^/########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~#####H...............,,,.................../^^^^^^^^^^^^^^^^^^^^^^^^^^/.########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######..............,,,..................../^^^^^^^^^^^^^^^^^^^^^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########...........,,,..................../^^^^^^^^^^^^^^^^^^^^^^^^/..########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##############........,,,..................../^^^^^^^^^^^^^^^^^^^^^^^/..#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww##################.....,,,....##...#######...../^^^^^^^^^^^^^^^^^^^^^/..##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww####################....,,,...#############....../^^^^^^^^^^^^^^^^^^//...##########
+wwwwwwwwwwwwwwwwwwwwwwwwww#######################....,,,...##############...../^^^^^^^^^^^^^^^^^/....###########
+wwwwwwwwwwwwwwwwwwwwwwww############wwwwww#######....,,,...##############...../^^^^^^^^^^^^^^^^/....############
+wwwwwwwwwwwwwwwwwwwwwwww###########wwwwwwwww#####....,,,...##############....../^^^^^^^^^^^^///.....############
+wwwwwwwwwwwwwwwwwwwwwww############wwwwwwww######....,,,...###############....../^^^^^^^^///.......#############
+wwwwwwwwwwwwwwwwwwwwwwww############wwwwww#######...,,,....###############......//^^^^^^/.........##############
+wwwwwwwwwwwwwwwwwwwwwwww#########################...,,,....###############......../^^^^/.........###############
+wwwwwwwwwwwwwwwwwwwwwwww#########################....,,,...################........////.........################
+wwwwwwwwwwwwwwwwwwwwwwww#########################....,,,...#################..................##################
+wwwwwwwwwwwwwwwwwwwwwwwww########################....,,,...##################...............####################
+wwwwwwwwwwwwwwwwwwwwwwwww#######################.....,,,...##################.............######################
+wwwwwwwwwwwwwwwwwwwwwwwwww##################.........,,,....##################...........#######################
+wwwwwwwwwwwwwwwwwwwwwwwwwww##############.............,,,.....##################......##########################
+wwwwwwwwwwwwwwww............##########................,,,.......################################################
+wwwwwwwwwwwwwwww............#########.................,,,...........############################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwww########..................,,,..............#########################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww######...................,,,...............########################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww#####....................,,,................#######################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~........................,,,....................###################################
+wwwwwwwwwwwwwwwwwwwwwwwww.............................,,,......................#################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~wwwwww.......BBBB...,,,.......................##################..############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......BBBB...,,,HH......HHHHHHHH........###############......##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......BBBB...,,,H..............H.........##############........########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......BBBB...,,,...............H..........###########...........#######
+wwwwwwwwwwwwwwwwwwwwwwwww..............................,,...HHH.........H...........######................######
+wwwwwwwwwwwwwwwwwwwwwwwww..............................,,...HHH.........H.................................######
+wwwwwwwwwwwwwwwwwwwwwwwww..............................,,...............H.................................######
+wwwwwwwwwwwwwwwwwwwwwwwww..............................,,...............H.................................######
+wwwwwwwwwwwwwwwwwwwwwwwww.............................,,,.........HHHH..H.................................######
+wwwwwwwwwwwwwwwwwwwwwwwww.............................,,,H........HHHH..H.................................######
+wwwwwwwwwwwwwwwwwwwwwwwww.............................,,,H..............H.................................######
+wwwwwwwwwwwwwwwwwwwwwwwww....................BBBBBBBB.,,,H..............H................................#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....BBBBBBBB.,,,HHHHHH........HH.......................##......########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....BBBBBBBB.,,,....................................###################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....BBBBBBBB.,,,.................................######################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....BBBBBBBB.,,,....................###################################
+wwwwwwwwwwwwwwwwwwwwwwwww.............................,,,................#######################################
+wwwwwwwwwwwwwwwwwwwwwwwww.............................,,,...........############################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~##############....,,,........###############################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~##############....,,,....###################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###############...,,,....####################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###############...,,,....####################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########wwww~~#....,,,...#####################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww######wwwww~~~....,,,,...#####################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###wwwwwwww~~~....,,,....#####################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~.....,,,...######################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###...,,,....####################################....##############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww####...,,,....##################################........############
+wwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwww######...,,,....################################...........###########
+wwwwwww......wwwwwwwwwwwwwwwwwwww##ww###########...,,,....##############################..............##########
+wwwwwww.......wwwwwwwwwwwwwwwwwww###############...,,,....#############################...............##########
+wwwwwww.......wwwwwwwwwwwwwwwwwww###############...,,,....###########################..................#########
+wwwwwwww......wwwwwwwwwwwwwwwwwww###############...,,,....#########################............/.......#########
+wwwwwwwww.....wwwwwwwwwwwwwwwwww##############.....,,,.....######################........./////^//......########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#############......,,,......###################.........//^^^^^^^^/.....########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww############.......,,,.......################........../^^^/////^^^/....########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###########.........,,,........##############.........//^^^/++++/^^^/....########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###########.........,,,.........############........./^^^^/++++++/^^^/...########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########...........,,,........############......../^^^^/+++++++/^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######.............,BBB.........##########........./^^^^/+++++++/^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######.............,BBB............................/^^^^/+++++++/^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######.............,BBB............................/^^^^/+++++++/^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######........BBB..,,,............................./^^^^/+++++++/^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######........BBB..,,,............................./^^^^^/+++++/^^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww######.........BBB.,,,............................./^^^^^^/+++++/^^^^^/...#######
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~###...............,,,............................../^^^^^^//+//^^^^^^/..########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~##......H.........,,,............................../^^^^^^^^/^^^^^^^^/..########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..................,,,............................../^^^^^^^^^^^^^^^^^/..########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..................,,,,............................./^^^^^^^^^^^^^^^^^/..########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........BBB.....,,,...BBB......................./^^^^^^^^^^^^^^^^/...########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........BBB.....,,,...BBB......................./^^^^^^^^^^^^^^^^/...########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~........H..BBB.....,,,,..BBB...............##.......//^^^^^^^^^^^^^/...#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.....................,,,...................####........////^^^^^^^^/....#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.....................,,,.................#######.........../^^^^^^^/....#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.................BBB.,,,...............##########...........//^^^^/....##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.................BBB..,,,............#############............////.....##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..######.........BBB..,,,.........#################...................###########
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~#########.............,,,.......###################...................###########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~#########.............,,,......####################...................###########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~###########...........,BBB...######################..................############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#############.........,BBB..######################...................############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##############........,BBB..######################..................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###############.......,,,...######################..................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#################.....,,,....#####################..................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#################....,,,....####################...................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#################.....,,,...####################...................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#####wwww#########....,,,....###################...................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###wwwwwwww#######....,,,,...##################....................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#wwwwwwwww#######.....,,,...##################....................#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#wwwwwwwww########....,,,....################..........##.........#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##wwwwwwww########....,,,....################..........##.........#############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww####wwww##########.....,,,....###############.........###..........############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##################.....,,,....##############..........###..........############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww############...........,,,,............###...........####..........############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########...............,,,..........................#####..........###########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#####..................,,,,........................######..........###########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~#.....................,,,........................######...........##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.....H...............,,,.......................########..........##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~....................,,,.......................########..........##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~....................,,,........................########.........##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~....................,,,........................#######..........#########
+wwwwwwwwwwwwwwwwwww..............www~~~....................,,,........................#######..........#########
+wwwwwwwwwwwwwwwwwww.......................H................,,,........................#######..........#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww..............................,.........................#######..........#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......................................................########..........#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......................................................########..........#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww......................................................########...........#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww............H........................................########............#########
+wwwwwwwwwwwwwwwwwww...............................................................########.............#########
+wwwwwwwwwwwwwwwwwww..............wwww~~~#.......................................##########.............#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~###....................................###########.............#########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~#####................................#############............##########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######.........................###################..........###########
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#########..................#########################.....###############
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww###########..............###############################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww################..........###############################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#################.........###############################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#################.........###############################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#################......##################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########################################################################
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww##########################################################################

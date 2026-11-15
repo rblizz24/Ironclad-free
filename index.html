@@ -3,17 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Ironclad Free: Battle Tank</title>
-<meta name="description" content="Ironclad Free: the top-down tank roguelike in your browser. Endless mode on the Verdant Front with the Ironclad and the Hound.">
+<title>Ironclad: Battle Tank (test build)</title>
+<meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#14110E">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Ironclad Free">
+<meta name="apple-mobile-web-app-title" content="Ironclad Test">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
+  @font-face { font-family: 'ICGateHead'; src: url('assets/fonts/BebasNeue.otf'); }
+  @font-face { font-family: 'ICGateText'; src: url('assets/fonts/Play-Bold.ttf'); }
   html, body {
     margin: 0; padding: 0; height: 100%; overflow: hidden;
     background: #0b0a08; color: #a99178;
@@ -32,6 +34,37 @@
   #fail.show { display: flex; }
   #fail h1 { margin: 0; font-size: 22px; letter-spacing: 0.04em; }
   #fail p { margin: 0; color: #a99178; }
+
+  /* the test build's password gate, in the console's colours */
+  #gate {
+    display: none; position: fixed; inset: 0; z-index: 10; box-sizing: border-box; padding: 24px;
+    background: radial-gradient(ellipse at 50% 35%, #2a241d 0%, #14110E 60%, #0b0a08 100%);
+    flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+    -webkit-user-select: text; user-select: text; touch-action: auto;
+  }
+  #gate.show { display: flex; }
+  #gate img { width: min(86vw, 460px); height: auto; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6)); }
+  #gate .plate {
+    width: min(86vw, 360px); box-sizing: border-box; padding: 18px 18px 16px;
+    background: linear-gradient(#2b2722, #1d1a16); border: 2px solid #0c0b09; border-radius: 6px;
+    box-shadow: inset 0 1px 0 #4a4238, inset 0 -2px 0 #0c0b09, 0 8px 18px rgba(0,0,0,0.55);
+    display: flex; flex-direction: column; gap: 12px; align-items: stretch; text-align: center;
+  }
+  #gate h1 { margin: 0; font: 30px/1 'ICGateHead', Impact, sans-serif; letter-spacing: 0.08em; color: #d4b26e; }
+  #gate p { margin: 0; font: 13px/1.3 'ICGateText', sans-serif; letter-spacing: 0.06em; color: #ac9b76; }
+  #gate input {
+    font: 18px 'ICGateText', sans-serif; letter-spacing: 0.08em; text-align: center; color: #e0cba4;
+    background: #0f0d0b; border: 2px solid #4a4238; border-radius: 4px; padding: 10px; outline: none;
+  }
+  #gate input:focus { border-color: #d4b26e; }
+  #gate button {
+    font: 22px/1 'ICGateHead', Impact, sans-serif; letter-spacing: 0.1em; color: #14110E; cursor: pointer;
+    background: linear-gradient(#8a8a5a, #66673f); border: 2px solid #0c0b09; border-radius: 4px; padding: 10px;
+    box-shadow: inset 0 1px 0 #a7a77a, 0 3px 0 #2c2c1a;
+  }
+  #gate button:active { transform: translateY(2px); box-shadow: inset 0 1px 0 #a7a77a, 0 1px 0 #2c2c1a; }
+  #gate button:disabled { opacity: 0.6; }
+  #gatemsg { min-height: 1.3em; color: #d4b26e !important; }
 </style>
 </head>
 <body>
@@ -40,20 +73,19 @@
   <h1>IRONCLAD COULDN'T START</h1>
   <p id="failwhy">This browser couldn't run the game. Try an up-to-date Chrome, Safari, Firefox or Edge.</p>
 </div>
+<div id="gate" role="dialog" aria-label="Password">
+  <img src="assets/sprites/title_logo.png" alt="Ironclad: Battle Tank">
+  <div class="plate">
+    <h1>TEST BUILD</h1>
+    <p>FOR FRIENDS AND TESTERS. ENTER THE PASSWORD TO PLAY.</p>
+    <input id="gatepw" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"
+           enterkeyhint="go" aria-label="Password">
+    <button id="gatego" type="button">ENTER</button>
+    <p id="gatemsg"></p>
+  </div>
+</div>
+<script src="pako_inflate.min.js"></script>
 <script src="ironclad.js"></script>
-<script src="classes.js"></script>
-<script>
-  (function () {
-    function fail(why) {
-      document.getElementById('failwhy').textContent = why;
-      document.getElementById('fail').classList.add('show');
-      if (window.IC) IC.log('fail: ' + why);
-    }
-    window.addEventListener('load', function () {
-      if (typeof main !== 'function') { fail('The game code (classes.js) did not load.'); return; }
-      try { main(); } catch (e) { fail('Start-up error: ' + (e && e.message ? e.message : e)); }
-    });
-  })();
-</script>
+<script src="gate.js"></script>
 </body>
 </html>

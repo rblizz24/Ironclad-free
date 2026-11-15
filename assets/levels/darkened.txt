@@ -1,0 +1,276 @@
+# darkened: written by tools/levels/make_layouts.py (edit there, or here by hand)
+size 128 176
+cell 32
+edge water
+floor t_concrete
+pad 38 143 83 158
+pad 57 147 87 154
+pad 80 147 87 154
+pad 80 147 87 154
+pad 80 119 87 154
+pad 80 119 87 126
+pad 80 76 87 126
+pad 80 76 87 83
+pad 80 38 87 83
+pad 81 33 112 50
+pad 81 114 112 131
+pad 26 73 49 88
+pad 71 73 92 88
+pad 61 148 67 154
+pad 61 28 67 154
+pad 35 77 83 82
+pad 78 77 83 82
+pad 61 39 86 44
+pad 81 39 86 44
+pad 61 120 86 125
+pad 81 120 86 125
+building c 28 74 35 78
+building c 28 83 35 87
+building c 41 74 48 78
+building c 41 83 48 87
+building a 76 76 82 82
+building d 86 75 89 78
+building d 86 82 89 85
+building c 88 36 95 39
+building c 88 126 95 129
+static
+prop crate 82.52 35.65 0
+prop crate 83.57 35.65 0
+prop crate 84.62 35.65 0
+prop crate 85.67 35.65 0
+prop crate 82.52 36.70 0
+prop crate 83.57 36.70 0
+prop crate 84.62 36.70 0
+prop crate 85.67 36.70 0
+prop crate 82.52 37.75 0
+prop crate 83.57 37.75 0
+prop crate 84.62 37.75 0
+prop crate 85.67 37.75 0
+prop crate 96.85 47.02 0
+prop crate 97.90 47.02 0
+prop crate 98.95 47.02 0
+prop crate 96.85 48.06 0
+prop crate 97.90 48.06 0
+prop crate 98.95 48.06 0
+prop crate 82.52 125.22 0
+prop crate 83.57 125.22 0
+prop crate 84.62 125.22 0
+prop crate 85.67 125.22 0
+prop crate 82.52 126.27 0
+prop crate 83.57 126.27 0
+prop crate 84.62 126.27 0
+prop crate 85.67 126.27 0
+prop crate 35.21 70.13 0
+prop crate 36.26 70.13 0
+prop crate 37.30 70.13 0
+prop crate 38.36 70.13 0
+prop crate 35.21 71.18 0
+prop crate 36.26 71.18 0
+prop crate 37.30 71.18 0
+prop crate 38.36 71.18 0
+prop crate 35.21 72.23 0
+prop crate 36.26 72.23 0
+prop crate 37.30 72.23 0
+prop crate 38.36 72.23 0
+prop sandbag 43.73 39.98 0
+prop sandbag 49.70 126.13 90
+prop jersey 61.70 103.50 0
+prop jersey 65.30 106.70 0
+start 61 154
+evac 81 42
+boss 63 59
+poi 46 24 NORTH GUNS
+poi 38 128 SOUTH GUNS
+poi 38 80 NAVAL WAREHOUSES
+poi 81 86 NAVAL HEADQUARTERS
+poi 92 123 DRY DOCKS
+prop x_dive 84.10 129.26 0
+prop x_davit 99.18 126.26 0
+prop x_torpedo 91.66 119.18 0
+prop x_torpedo 91.66 120.68 0
+prop x_deckgun 36.90 30.42 0
+prop x_deckgun 54.54 29.42 0
+prop x_deckgun 33.50 131.74 0
+prop x_deckgun 43.30 123.70 0
+prop x_reel 101.18 41.22 0
+prop x_reel 97.18 44.26 0
+prop x_rafts 98.62 117.42 0
+prop x_rafts 100.62 121.98 0
+prop x_mines 33.50 89.26 0
+grid
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~~~~~~~~~~~~......~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~~~~~~~~~...///.......~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~..............///^^^/////....~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~..............///^^^^^^^^^^^/....~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~.....//////////^^^^^^^^^^^^^^^/....~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~~....//^^^^^^^^^^^^^^^^^^^^^^^^^/.....~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~..../^^^^^^^^///////////^^^^^^^^^/.....~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~..../^^^^^^^/++++++++++/H^^^^^^^^/.....~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~..../^^^^^^^/++++++++++H/^^^^^^^^/......~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~...../^^^^^^/++++++++++/^^^^^^^^^/......~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~...../^HH^^^/++++++++++/^^^^^^^^^^/.....~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~....../HH^^^^/+++++++//^^^^^^^^^^^/.....~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~~....../^^^^^^//+++//^^^^^^^^^^^^/......~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~......./^^^^^^^///^^^^^^^^^^^^//.......~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~.......//^^^^^^^^^^^^^^^^^^^/.........~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~......../^^^^^^^^^^^^^^^^^/...........~~~~~~~ww~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~........//^^^^^^^^^^^^^^/..............~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~.........///^^^^^^^^^//.................~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~.........../////////.....................~~~~................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~........................................~~~...H..............H.............~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~.........................................~................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~................................................BBBBBBBB.....wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~................................................BBBBBBBB.....wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~................................................BBBBBBBB.....wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..............~~~~~~~...........................BBBBBBBB.....wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~~~~~~~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~.........~~~~~~~~~~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~~~~www~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwww~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~..........~~~wwwwww~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~~wwwwww~~~.......~~~~~~~~~....................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwwww~~~.......~~~~~~~~~~~~.....................wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwwww~~~.......~~~~~~~~~~~~.....................wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwwww~~~.......~~~wwwww~~~~.....................wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwwww~~~.......~~~wwwwww~~~.....................wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~~wwwwww~~~.......~~~wwwwww~~~....H.......H......H.............~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwww~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwww~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwww~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~..........~~~~wwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~...........~~~wwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~............~~~wwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~~wwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~...........~~~wwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~............~~~wwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~~wwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~...........~~~wwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~............~~~wwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~~wwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~..........~~~~~~~wwwwwww~~~.......~~~~~~~~~~~~........~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~..........~~~~~~~~wwwwww~~~.......~~~~~~~~~~~~........~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~..........~~~~~~~~~wwwww~~~.......~~~~~~~~~~~~........~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~........................~~~wwwww~~~.......~~~......................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~~~~~~~~~.......~~~.HH..........HHHHHHHH.~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~~~~~~~~~.......~~~.H.............BBBBHH.~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~~~~~~~~~.......~~~.H...BBBBBBB...BBBBHH.~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.......................H...BBBBBBB...BBBB...~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.......................H...BBBBBBB...BBBB...~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..................................................BBBBBBB..........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..................................................BBBBBBB..........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..................................................BBBBBBB..........~~~wwwwwwwwwwwwwwwww~~~~~~~wwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..................................................BBBBBBB...BBBB...~~~wwwwwwwwwwwwwwww~~~~~~~~~wwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~~~~~~~~~.......~~~.H.............BBBB...~~~wwwwwwwwwwwwwww~~~~~~~~~~~wwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~~~~~~~~~.......~~~.H.............BBBB...~~~wwwwwwwwwwwwwww~~~.....~~~wwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~~~~~~~~~.......~~~.H.............BBBB...~~~wwwwwwwwwwwwwww~~~.....~~~wwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~wwwww~~~.......~~~.H....................~~~wwwwwwwwwwwwwww~~~.....~~~wwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~..BBBBBBBB.....BBBBBBBB.~~~wwwww~~~.......~~~.HHHHHHHH.............~~~wwwwwwwwwwwwwww~~~.....~~~wwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~........................~~~wwwww~~~.......~~~......................~~~wwwwwwwwwwwwwww~~~~....~~~wwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~.........~~~~~~~~~~~wwwww~~~.......~~~~~~~~~~~~........~~~~~~~~wwwwwwwwwwwwwwww~~~~~~~~~~wwwwww
+wwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~.........~~~~~~~~~~wwwwww~~~.......~~~~~~~~~~~~........~~~~~~~wwwwwwwwwwwwwwwwww~~~~~~~~wwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~.........~~~~~~~~~wwwwwww~~~.......~~~~~~~~~~~~........~~~~~~wwwwwwwwwwwwwwwwwwww~~~~~~wwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~wwwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~.........~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~~wwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~wwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.........~~~~wwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~........~~~~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~........~w~wwwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.......~~wwwwwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.......~wwwwwwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.......~wwwwwwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~.......~~ww~wwwwwwwwwwww~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~........~~~~~wwwwwwwwwww~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..........~~~~wwwwwwwwww~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~...........~~~wwwwwwwwww~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~...........~~~wwwwwwwwww~~~.......~~~wwwwww~~~.................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~...........~~~wwwwwwwwww~~~.......~~~wwwwww~~~....H.......H........~wwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~............~~~~wwwwwwwww~~~.......~~~wwwwww~~~.....................~wwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww~~~~~~~~~...............~~~~~wwwwwwww~~~.......~~~~~~~~~~~~.....................wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww~~~~~~....................~~~~~wwwwwww~~~.......~~~~~~~~~~~~.....................wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww~~~~.........//..............~~~~wwwwww~~~.......~~~~~~~~~~~~.................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwwww~~~~........//^^//.............~~~wwwwww~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwww~~~~......///^^^^^^////////.....~~~~wwwww~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwww~~~.....//^^^^^^^^^^^^^^^^^/HH...~~~~wwww~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwww~~~~..../^^^^^^^^^^^^^^^^^^^^/H....~~~wwww~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwww~~~..../^^^^^^^^^^^^^^^^^^^^^/.....~~~~www~~~....................................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwww~~~~.../^^^^^^^^^^^^^^^^^^^^^^^/.....~~~www~~~........................................wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww~~~..../^^^^^^^^^^^^^^^^^^^^^^^/.....~~~www~~~.......~~~~~~~~~~~~........BBBBBBBB.....wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww~~~..../^^^^^^^^^^^^^^^^^^^^^^^^/....~~~www~~~.......~~~~~~~~~~~~........BBBBBBBB.....wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww~~~...../^^^^^^^^^^^^^^^^^^^^^^^/....~~~www~~~.......~~~~~~~~~~~~........BBBBBBBB.....wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww~~~~..../^^^^^^HH^^//////^^^^^^^/....~~~www~~~.......~~~wwwwww~~~........BBBBBBBB.................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwww~~~...../^^^^^HH^/++++++/^^^^^^/....~~~www~~~.......~~~wwwwww~~~.................................~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwww~~~~...../^^^^^^/+++++++/^^^^^^/....~~~www~~~.......~~~wwwwww~~~....H..............H.............~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwww~~~...../^^^^^^/+++++++/^^^^^^/....~~~www~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwww
+wwwwwwwwwwwwwwwww~~~~...../^^^^/++++++++/^^^^^^/....~~~~ww~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww~~~~...../^^^/+++++++/^^^^^^^/....~~~~~~~~~.......~~~wwwwww~~~........~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww~~~...../^^^^/+++++/^^^^^^^/.......~~~~~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww~~~~...../^^^//////^^^^^^^/.........~~~~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww~~~~.....//^^^^^^^^^^^^//............~~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwww~~~~......////////////...............~~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwww~~~~~................................~~.......~~~wwwwww~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwww~~~~~................................~.......~~~~~~~~~~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww~~~~~~~...........~~................~.......~~~~~~~~~~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~~~~~~~~~.......................~~~~~~~~~~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~~~~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,,~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,,,~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,,,,,~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww,,,,,~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww,,,,,,~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwww,,,,,ww~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww,,,,,,www~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww~~~~~wwwww,,,,,wwwww~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwww~~~~~~~~~ww,,,,,wwwwww~~~..................................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwww~~~~~~~~~~,,,,,wwwwwwww~~~..............................................~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwww~~~~~...~~,,,,,wwwwwwwww~~~..............................................~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwww~~~~.....,,,,,~wwwwwwwwww~~~..............................................~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwww~~~......,,,,~~~wwwwwwwww~~~..............................................~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwww~~~......,,,.~~~wwwwwwwww~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwww~~~..........~~~wwwwwwwwww~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwww~~~..........~~~wwwwwwwwwww~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwww~~~..........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwww~~~~.........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwww~~~~........~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwww~~~~~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwww~~~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwww~~~~~~~~~~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww

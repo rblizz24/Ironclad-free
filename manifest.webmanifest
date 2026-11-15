@@ -1,7 +1,7 @@
 {
-  "name": "Ironclad Free: Battle Tank",
-  "short_name": "Ironclad Free",
-  "description": "The free edition of Ironclad: Endless mode on the Verdant Front with the Ironclad and the Hound.",
+  "name": "Ironclad: Battle Tank",
+  "short_name": "Ironclad Test",
+  "description": "Ironclad 3.0, a test build for friends and testers.",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",

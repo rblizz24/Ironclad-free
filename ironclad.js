@@ -10,9 +10,9 @@
   const BASE_W = 540, BASE_H = 960;
   const MAX_ASPECT = 0.75;          // wider screens get a portrait column, like a phone or tablet
   const MAX_BACKING_W = 1280;       // sprites are drawn for 1080 px across; more pixels only cost fill rate
-  // the Android build's SharedPreferences file name, as a key prefix. The browser version is the free edition and
-  // every site under rblizz24.github.io shares one localStorage, so it keeps its own save beside the old full one.
-  const STORE = 'ironcladbattletank.free.';
+  // the Android build's SharedPreferences file name, as a key prefix. Every site under rblizz24.github.io shares one
+  // localStorage, so the 3.0 test build keeps its own save beside the old free edition's.
+  const STORE = 'ironclad3test.';
   const FONT_FILES = ['BebasNeue.otf', 'Play-Bold.ttf', 'Play-Regular.ttf', 'AlfaSlabOne.ttf'];
   const FONT_FALLBACK = ['Impact, sans-serif', 'sans-serif', 'sans-serif', 'Georgia, serif'];
 
@@ -105,6 +105,35 @@
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.clip();
   };
+  /** Gfx.clipOutCircle: everything but a circle. */
+  IC.clipOutCircle = function (x, y, r) {
+    if (!clips.length) return;
+    applyM();
+    ctx.save();
+    clips[clips.length - 1]++;
+    ctx.beginPath();
+    ctx.rect(-1e6, -1e6, 2e6, 2e6);
+    ctx.arc(x, y, r, 0, Math.PI * 2, true);
+    ctx.clip('evenodd');
+  };
+  /** Gfx.clipPoly: the polygon begun with polyBegin and polyPt. */
+  IC.clipPoly = function () {
+    if (!clips.length || polyN < 3) return;
+    ctx.closePath();
+    ctx.save();
+    clips[clips.length - 1]++;
+    ctx.clip();
+  };
+  /** Gfx.clipRect: the same, to a rectangle. */
+  IC.clipRect = function (x, y, w, h) {
+    if (!clips.length) return;
+    applyM();
+    ctx.save();
+    clips[clips.length - 1]++;
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.clip();
+  };
   IC.translate = function (x, y) {
     m[4] += m[0] * x + m[2] * y;
     m[5] += m[1] * x + m[3] * y;
@@ -140,8 +169,9 @@
   // lightEnd multiplies it over the frame.
 
   let lightCanvas = null, screenCtx = null, screenM = null, screenStack = null;
-  IC.lightBegin = function (ambient, res) {
+  IC.lightBegin = function (ambient, res, zoom) {
     if (screenCtx) return;
+    const z = zoom > 0 ? zoom : 1;      // the battlefield's camera zoom: drawing comes in its view units
     const w = Math.max(1, Math.round(logicalW * res)), h = Math.max(1, Math.round(logicalH * res));
     if (!lightCanvas) lightCanvas = document.createElement('canvas');
     if (lightCanvas.width !== w || lightCanvas.height !== h) { lightCanvas.width = w; lightCanvas.height = h; }
@@ -157,7 +187,7 @@
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    m = [w / logicalW, 0, 0, h / logicalH, 0, 0];
+    m = [w / logicalW * z, 0, 0, h / logicalH * z, 0, 0];
     stack.length = 0;
     ctxDirty = true;
   };
@@ -228,11 +258,136 @@
       const s = sprites[h];
       const im = new Image();
       im.decoding = 'async';
-      im.onload = function () { s.img = im; resolve(true); };
-      im.onerror = function () { IC.log('missing sprite ' + s.name); resolve(false); };
-      im.src = 'assets/sprites/' + s.name + '.png';
+      im.onload = function () { if (!s.freed) s.img = im; resolve(true); };
+      im.onerror = function () { IC.log('missing picture ' + s.name); resolve(false); };
+      im.src = s.src || ('assets/sprites/' + s.name + '.png');
     });
   }
+
+  // ---- other pictures (Platform.loadImage: a painted level's squares, its shade), sized from images.json at once and
+  // drawn once they arrive; a few in flight at a time, the latest asked for first
+  let imageSizes = {};
+  const imageQueue = [];
+  let imagesInFlight = 0;
+  function pumpImages() {
+    while (imagesInFlight < 6 && imageQueue.length) {
+      const h = imageQueue.pop();
+      if (sprites[h].freed) continue;
+      imagesInFlight++;
+      loadSprite(h).then(function () { imagesInFlight--; pumpImages(); });
+    }
+  }
+  IC.loadImage = function (path, ppu) {
+    const wh = imageSizes[path];
+    if (!wh) return -1;
+    const h = sprites.length;
+    const k = ppu > 0 ? ppu : 1;
+    sprites.push({ name: path, src: 'assets/' + path, pw: wh[0], ph: wh[1], w: wh[0] / k, h: wh[1] / k,
+                   img: null, fb: -1, tints: null, freed: false });
+    imageQueue.push(h);
+    pumpImages();
+    return h;
+  };
+  IC.imgPxW = function (h) { return sprites[h].pw || sprites[h].w * 2; };
+  IC.imgPxH = function (h) { return sprites[h].ph || sprites[h].h * 2; };
+  IC.freeImage = function (h) { const s = sprites[h]; if (s) { s.freed = true; s.img = null; s.tints = null; s.shades = null; } };
+
+  // ---- texts and data from assets/, fetched as the game asks (it reads them at once: a level's layout as it starts)
+  function getSync(path, binary) {
+    try {
+      const x = new XMLHttpRequest();
+      x.open('GET', 'assets/' + path, false);
+      if (binary) x.overrideMimeType('text/plain; charset=x-user-defined');
+      x.send(null);
+      if (x.status !== 200 && x.status !== 0) return null;
+      return x.responseText;
+    } catch (err) {
+      return null;
+    }
+  }
+  IC.loadText = function (path) {
+    const t = getSync(path, false);
+    return t === null ? null : t;
+  };
+  // (a gzipped file, the height maps, is unpacked here: pako, MIT; HeightMap reads it either way)
+  let bytes = new Uint8Array(0);
+  IC.loadBytes = function (path) {
+    const t = getSync(path, true);
+    if (t === null) return -1;
+    let b = new Uint8Array(t.length);
+    for (let i = 0; i < t.length; i++) b[i] = t.charCodeAt(i) & 255;
+    if (b.length > 2 && b[0] === 0x1f && b[1] === 0x8b && window.pako) {
+      try { b = window.pako.ungzip(b); } catch (err) { IC.log('ungzip ' + path + ': ' + err); }
+    }
+    bytes = b;
+    return b.length;
+  };
+  IC.byteAt = function (i) { return bytes[i]; };
+
+  // ---- drawing into a picture of its own (Gfx.bake) or a layer laid over the screen at an opacity (Gfx.layer)
+  const targets = [];
+  function pushTarget(c, nm) {
+    targets.push({ ctx: ctx, m: m, stack: stack.slice(), clips: clips.slice(), font: lastFont });
+    ctx = c.getContext('2d');
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.textBaseline = 'alphabetic';
+    ctx.imageSmoothingEnabled = true;
+    lastFont = '';
+    m = nm;
+    stack.length = 0;
+    clips.length = 0;
+    ctxDirty = true;
+  }
+  function popTarget() {
+    const t = targets.pop();
+    for (const n of clips) for (let i = 0; i < n; i++) ctx.restore();
+    ctx = t.ctx;
+    m = t.m;
+    stack.length = 0;
+    for (const e of t.stack) stack.push(e);
+    clips.length = 0;
+    for (const e of t.clips) clips.push(e);
+    lastFont = t.font;
+    ctxDirty = true;
+  }
+  IC.bakeBegin = function (name, w, h, pw, ph, px) {
+    if (pw * ph > 4096 * 4096) return -1;
+    const c = document.createElement('canvas');
+    c.width = pw;
+    c.height = ph;
+    const hd = sprites.length;
+    sprites.push({ name: name, w: w, h: h, img: c, fb: -1, tints: null, baking: true });
+    pushTarget(c, [px, 0, 0, px, pw / 2, ph / 2]);
+    return hd;
+  };
+  IC.bakeEnd = function () { if (targets.length) popTarget(); };
+  const layerCanvases = [];
+  IC.layerBegin = function (alpha) {
+    const depth = targets.length;
+    let c = layerCanvases[depth];
+    const cw = ctx.canvas.width, chh = ctx.canvas.height;
+    if (!c) { c = document.createElement('canvas'); layerCanvases[depth] = c; }
+    if (c.width !== cw || c.height !== chh) { c.width = cw; c.height = chh; }
+    const g = c.getContext('2d');
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.clearRect(0, 0, cw, chh);
+    const was = m.slice();
+    pushTarget(c, was);
+    targets[targets.length - 1].layer = { canvas: c, alpha: alpha };
+  };
+  IC.layerEnd = function () {
+    if (!targets.length) return;
+    const l = targets[targets.length - 1].layer;
+    popTarget();
+    if (!l) return;
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = Math.max(0, Math.min(1, l.alpha));
+    ctx.drawImage(l.canvas, 0, 0);
+    ctx.restore();
+    ctxDirty = true;
+  };
 
   /** Load handles with a few requests in flight at a time, reporting progress. */
   async function loadAll(handles, onProgress, parallel) {
@@ -277,8 +432,8 @@
     let c = s.tints.map.get(key);
     if (!c) {
       c = document.createElement('canvas');
-      c.width = im.naturalWidth;
-      c.height = im.naturalHeight;
+      c.width = im.naturalWidth || im.width;
+      c.height = im.naturalHeight || im.height;
       const g = c.getContext('2d');
       g.drawImage(im, 0, 0);
       g.globalCompositeOperation = 'source-in';
@@ -322,6 +477,106 @@
     applyM();
     ctx.globalAlpha = alpha >= 1 ? 1 : alpha;
     ctx.drawImage(im, sx, sy, sw, sh, x, y, w, hh);
+    ctx.globalAlpha = 1;
+  };
+
+  // ------------------------------------------------------------------ triangles (a model's faces) and meshes
+
+  /** The sprite's picture darkened to q/16 (a face turned from the light), cached per sprite. */
+  function shaded(h, q) {
+    const im = imageOf(h);
+    if (!im) return null;
+    if (q >= 16) return im;
+    const s = sprites[h];
+    if (!s.shades || s.shades.src !== im) s.shades = { src: im, by: [] };
+    let c = s.shades.by[q];
+    if (!c) {
+      c = document.createElement('canvas');
+      c.width = im.naturalWidth || im.width;
+      c.height = im.naturalHeight || im.height;
+      const g = c.getContext('2d');
+      g.drawImage(im, 0, 0);
+      g.globalCompositeOperation = 'source-atop';
+      g.fillStyle = 'rgba(0,0,0,' + (1 - q / 16).toFixed(3) + ')';
+      g.fillRect(0, 0, c.width, c.height);
+      s.shades.by[q] = c;
+    }
+    return c;
+  }
+
+  /** Draw the picture im's triangle (pixel corners u, v) onto the triangle x, y (logical units under m). */
+  function drawTri(im, u0, v0, u1, v1, u2, v2, x0, y0, x1, y1, x2, y2) {
+    const det = (u1 - u0) * (v2 - v0) - (u2 - u0) * (v1 - v0);
+    if (Math.abs(det) < 1e-9) return;
+    // the map from the picture to the face: x = a*u + c*v + e
+    const a = ((x1 - x0) * (v2 - v0) - (x2 - x0) * (v1 - v0)) / det;
+    const c = ((x2 - x0) * (u1 - u0) - (x1 - x0) * (u2 - u0)) / det;
+    const b = ((y1 - y0) * (v2 - v0) - (y2 - y0) * (v1 - v0)) / det;
+    const d = ((y2 - y0) * (u1 - u0) - (y1 - y0) * (u2 - u0)) / det;
+    const e = x0 - a * u0 - c * v0, f = y0 - b * u0 - d * v0;
+    // a hair bigger than the face, so its neighbours meet without a seam
+    const cx = (x0 + x1 + x2) / 3, cy = (y0 + y1 + y2) / 3;
+    const k = 1.04;
+    ctx.save();
+    ctx.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]);
+    ctx.beginPath();
+    ctx.moveTo(cx + (x0 - cx) * k, cy + (y0 - cy) * k);
+    ctx.lineTo(cx + (x1 - cx) * k, cy + (y1 - cy) * k);
+    ctx.lineTo(cx + (x2 - cx) * k, cy + (y2 - cy) * k);
+    ctx.closePath();
+    ctx.clip();
+    ctx.transform(a, b, c, d, e, f);
+    ctx.drawImage(im, 0, 0);
+    ctx.restore();
+    ctxDirty = true;
+  }
+
+  IC.tri = function (h, u0, v0, u1, v1, u2, v2, x0, y0, x1, y1, x2, y2, shade) {
+    const q = Math.max(0, Math.min(16, Math.round(shade * 16)));
+    const im = shaded(h, q);
+    if (!im) return;
+    const iw = im.naturalWidth || im.width, ih = im.naturalHeight || im.height;
+    drawTri(im, u0 * iw, v0 * ih, u1 * iw, v1 * ih, u2 * iw, v2 * ih, x0, y0, x1, y1, x2, y2);
+  };
+
+  // a picture laid through a grid of points (Gfx.spriteMesh: the painted ground lifted by its heights). The canvas has
+  // no mesh, so the grid is taken a few cells at a time: a cell still a parallelogram is one drawImage, a bent one two
+  // triangles.
+  let meshXY = new Float32Array(2048), meshN = 0;
+  IC.meshBegin = function () { meshN = 0; };
+  IC.meshPt = function (x, y) {
+    if (meshN * 2 + 2 > meshXY.length) { const b = new Float32Array(meshXY.length * 2); b.set(meshXY); meshXY = b; }
+    meshXY[meshN * 2] = x; meshXY[meshN * 2 + 1] = y; meshN++;
+  };
+  IC.meshDraw = function (h, mw, mh, alpha) {
+    if (!(alpha > 0.003)) return;
+    const im = imageOf(h);
+    if (!im || meshN < (mw + 1) * (mh + 1)) return;
+    const iw = im.naturalWidth || im.width, ih = im.naturalHeight || im.height;
+    const kx = Math.max(1, Math.round(mw / 4)), ky = Math.max(1, Math.round(mh / 4));
+    const P = function (i, j) { return (j * (mw + 1) + i) * 2; };
+    ctx.globalAlpha = alpha >= 1 ? 1 : alpha;
+    for (let j = 0; j < mh; j += ky) {
+      const j2 = Math.min(mh, j + ky);
+      for (let i = 0; i < mw; i += kx) {
+        const i2 = Math.min(mw, i + kx);
+        const A = P(i, j), B = P(i2, j), C = P(i, j2), D = P(i2, j2);
+        const ax = meshXY[A], ay = meshXY[A + 1], bx = meshXY[B], by = meshXY[B + 1];
+        const cx = meshXY[C], cy = meshXY[C + 1], dx = meshXY[D], dy = meshXY[D + 1];
+        const su = i / mw * iw, sv = j / mh * ih, eu = i2 / mw * iw, ev = j2 / mh * ih;
+        const ex = bx + cx - ax - dx, ey = by + cy - ay - dy;
+        if (ex * ex + ey * ey < 0.01) {
+          const sw = eu - su, sh = ev - sv;
+          ctx.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]);
+          ctx.transform((bx - ax) / sw, (by - ay) / sw, (cx - ax) / sh, (cy - ay) / sh, ax, ay);
+          ctx.drawImage(im, su, sv, sw, sh, 0, 0, sw, sh);
+          ctxDirty = true;
+        } else {
+          drawTri(im, su, sv, eu, sv, eu, ev, ax, ay, bx, by, dx, dy);
+          drawTri(im, su, sv, eu, ev, su, ev, ax, ay, dx, dy, cx, cy);
+        }
+      }
+    }
     ctx.globalAlpha = 1;
   };
 
@@ -408,9 +663,10 @@
     ctx.lineTo(x2, y2);
     ctx.stroke();
   };
-  let polyN = 0;
-  IC.polyBegin = function () { applyM(); ctx.beginPath(); polyN = 0; };
-  IC.polyPt = function (x, y) { if (polyN++ === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); };
+  let polyN = 0, partN = 0;
+  IC.polyBegin = function () { applyM(); ctx.beginPath(); polyN = 0; partN = 0; };
+  IC.polyNext = function () { if (partN > 0) ctx.closePath(); partN = 0; };
+  IC.polyPt = function (x, y) { polyN++; if (partN++ === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); };
   IC.polyFill = function (c) {
     if (polyN < 3) return;
     ctx.closePath();
@@ -482,6 +738,14 @@
     try { return new URLSearchParams(window.location.search).has(name); } catch (e) { return false; }
   };
   IC.vibrate = function (ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { /* not allowed */ } };
+  /** The seed box's PASTE: the clipboard's text arrives as the box's text (the browser may ask first). */
+  IC.pasteText = function () {
+    try {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        navigator.clipboard.readText().then(function (t) { if (typeof t === 'string') kbText = t; }).catch(function () { });
+      }
+    } catch (e) { /* no clipboard access: the box still takes a paste from the keyboard */ }
+  };
   IC.copyText = function (text) {
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).catch(function () { }); return; }
@@ -561,6 +825,7 @@
       const visible = !document.hidden;
       if (visibleFn) visibleFn(visible);
       if (actx) { if (visible) actx.resume(); else actx.suspend(); }
+      musicVisible(visible);
       lastT = 0;
     });
   }
@@ -693,6 +958,214 @@
     } catch (err) {
       IC.log('audio unavailable: ' + err);
     }
+    musicUnlock();
+  }
+
+  // ------------------------------------------------------------------ the soundtrack
+  // Two voices, each an MP3 from assets/music fetched and decoded whole, then played by a looping buffer source: the
+  // files are made to loop between loopFrom and loopTo (the same music either side, tools/assetgen/music.py), and a
+  // buffer source loops there to the sample, so nothing has to be started on cue. Each goes through a gain node (fades
+  // work on iOS too, where an element's volume can't be set), in an AudioContext of its own at 32 kHz: the effects'
+  // context runs at 22 kHz, which would dull the music; 32 kHz keeps all a 128 kbps MP3 holds, in a third less memory
+  // than 48. Decoding waits for the first tap (an AudioContext needs one).
+
+  const MUSIC_RATE = 32000;
+  // three voices: two for the music (one can fade into the other) and the level's ambience
+  const mv = [null, null, null];
+  let mctx = null;
+  // the muffle (the upgrade cards, the radio, the pause menu): every voice through one low-pass, 0 clear to 1 muffled
+  let mfilter = null, muffle = 0;
+  function muffleHz(x) { return Math.min(20000 * Math.pow(700 / 20000, x), (mctx ? mctx.sampleRate : 32000) * 0.45); }
+  function musicOut() {
+    if (!mfilter) {
+      mfilter = mctx.createBiquadFilter();
+      mfilter.type = 'lowpass';
+      mfilter.Q.value = 0.707;
+      mfilter.frequency.value = muffleHz(muffle);
+      mfilter.connect(mctx.destination);
+    }
+    return mfilter;
+  }
+
+  function musicUnlock() {
+    try {
+      if (!mctx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) { try { mctx = new AC({ sampleRate: MUSIC_RATE }); } catch (e) { mctx = new AC(); } }
+      }
+      if (mctx && mctx.state !== 'running' && !document.hidden) mctx.resume();
+    } catch (err) { mctx = null; }
+    for (const v of mv) if (v) startVoice(v);
+  }
+
+  // A voice is one or more parts (a level track's drums, bass and the rest: tools/assetgen/stems.py), each its own MP3
+  // of the same length, decoded whole and started together on the context's clock so they stay in lockstep; each part
+  // has its own gain (its level), under the voice's (its volume).
+  function decodePart(v, p) {
+    if (!mctx || !p.data || p.decoding || p.buf) return;
+    p.decoding = true;
+    const data = p.data;
+    p.data = null;
+    let settled = false;
+    const done = function (buf) {
+      if (settled) return;
+      settled = true;
+      p.decoding = false;
+      if (v.dead) return;
+      p.buf = buf;
+      startVoice(v);
+    };
+    const fail = function (err) {
+      if (settled) return;
+      settled = true;
+      p.decoding = false;
+      p.failed = true;
+      IC.log('music ' + p.file + ': ' + err);
+      startVoice(v);
+    };
+    try {
+      const pr = mctx.decodeAudioData(data, done, fail);
+      if (pr && pr.then) pr.then(done, fail);
+    } catch (err) { fail(err); }
+  }
+
+  function startVoice(v) {
+    if (!mctx || v.dead) return;
+    let ready = true;
+    for (const p of v.parts) {
+      if (p.failed) continue;
+      if (!p.buf) { ready = false; decodePart(v, p); }
+    }
+    if (!ready || !v.started || v.playing) return;
+    try {
+      const g = mctx.createGain();
+      g.gain.value = v.vol;
+      g.connect(musicOut());
+      v.gain = g;
+      const t = mctx.currentTime + 0.05;
+      const at = v.at > 0 && v.at < v.to ? v.at : 0;
+      for (const p of v.parts) {
+        if (!p.buf) continue;
+        const pg = mctx.createGain();
+        pg.gain.value = p.level;
+        pg.connect(g);
+        const src = mctx.createBufferSource();
+        src.buffer = p.buf;
+        src.loop = true;
+        src.loopStart = v.from;
+        src.loopEnd = v.to > v.from ? v.to : p.buf.duration;
+        src.connect(pg);
+        src.start(t, at);
+        p.src = src;
+        p.gain = pg;
+      }
+      v.playing = true;
+      v.t0 = t - at;
+      for (const p of v.parts) if (p.pend) { applyLayer(v, p, p.pend); p.pend = null; }
+    } catch (err) { IC.log('music ' + v.name + ': ' + err); }
+  }
+
+  function newVoice(slot, name, files, from, to, at) {
+    IC.musicStop(slot);
+    const v = { name: name, from: from, to: to, at: at || 0, vol: 0, gain: null, started: false, playing: false,
+                dead: false, t0: 0, parts: [] };
+    for (const file of files) {
+      const p = { file: file, data: null, buf: null, src: null, gain: null, level: 1, decoding: false, failed: false, pend: null };
+      v.parts.push(p);
+      fetch('assets/music/' + file + '.mp3')
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
+        .then(function (data) { if (v.dead) return; p.data = data; decodePart(v, p); })
+        .catch(function (err) { p.failed = true; IC.log('music ' + file + ': ' + err); });
+    }
+    mv[slot] = v;
+  }
+
+  IC.musicLoad = function (slot, name, from, to, at) { newVoice(slot, name, [name], from, to, at); };
+  IC.musicLoadParts = function (slot, name, parts, from, to, at) {
+    const files = String(parts).split('|').filter(function (x) { return x.length > 0; })
+      .map(function (x) { return name + '.' + x; });
+    newVoice(slot, name, files.length ? files : [name], from, to, at);
+  };
+
+  /** Where a playing voice is in its file (s), looped back into its loop. */
+  function voicePos(v) {
+    let t = mctx.currentTime - v.t0;
+    if (t < 0) return 0;
+    if (v.to > v.from && t >= v.to) t = v.from + (t - v.from) % (v.to - v.from);
+    return t;
+  }
+
+  /** A part's level: to `level` over `fade` s, from when the voice reaches `at` s into its file (at < 0: now). */
+  function applyLayer(v, p, c) {
+    if (!p.gain) { p.level = c.level; return; }
+    const now = mctx.currentTime;
+    let when = now;
+    if (c.at >= 0) {
+      const pos = voicePos(v);
+      let wait = c.at - pos;
+      if (wait < -0.02 && v.to > v.from) wait += v.to - v.from;
+      when = now + Math.max(0, wait);
+    }
+    try {
+      const g = p.gain.gain;
+      g.cancelScheduledValues(now);
+      g.setValueAtTime(g.value, now);
+      g.setValueAtTime(g.value, when);
+      g.linearRampToValueAtTime(c.level, when + Math.max(0.005, c.fade));
+    } catch (err) { p.gain.gain.value = c.level; }
+    p.level = c.level;
+  }
+
+  IC.musicLayer = function (slot, part, level, at, fade) {
+    const v = mv[slot];
+    if (!v || part < 0 || part >= v.parts.length) return;
+    const p = v.parts[part];
+    const c = { level: Math.max(0, Math.min(1, level)), at: at, fade: fade };
+    if (!v.playing) { p.level = c.level; p.pend = null; return; }
+    applyLayer(v, p, c);
+  };
+  IC.musicStart = function (slot) {
+    const v = mv[slot];
+    if (!v) return;
+    v.started = true;
+    startVoice(v);
+  };
+  IC.musicVolume = function (slot, x) {
+    const v = mv[slot];
+    if (!v) return;
+    v.vol = Math.max(0, Math.min(1, x));
+    if (v.gain) { try { v.gain.gain.setTargetAtTime(v.vol, mctx.currentTime, 0.015); } catch (err) { v.gain.gain.value = v.vol; } }
+  };
+  IC.musicMuffle = function (x) {
+    muffle = Math.max(0, Math.min(1, x));
+    if (mfilter) {
+      try { mfilter.frequency.setTargetAtTime(muffleHz(muffle), mctx.currentTime, 0.05); }
+      catch (err) { mfilter.frequency.value = muffleHz(muffle); }
+    }
+  };
+  IC.musicStop = function (slot) {
+    const v = mv[slot];
+    if (!v) return;
+    mv[slot] = null;
+    v.dead = true;
+    for (const p of v.parts) {
+      if (p.src) { try { p.src.stop(); p.src.disconnect(); } catch (err) { /* gone */ } }
+      if (p.gain) { try { p.gain.disconnect(); } catch (err) { /* gone */ } }
+      p.src = null; p.buf = null; p.data = null;
+    }
+    if (v.gain) { try { v.gain.disconnect(); } catch (err) { /* gone */ } }
+  };
+  IC.musicPosition = function (slot) {
+    const v = mv[slot];
+    if (!v || !v.playing || !mctx || mctx.state !== 'running') return -1;
+    let t = mctx.currentTime - v.t0 - (mctx.outputLatency || mctx.baseLatency || 0);
+    if (t < 0) return 0;
+    if (v.to > v.from && t >= v.to) t = v.from + (t - v.from) % (v.to - v.from);
+    return t;
+  };
+  function musicVisible(visible) {
+    // the context's clock stops with it, so the voices and their positions pick up where they were
+    if (mctx) { try { if (visible) mctx.resume(); else mctx.suspend(); } catch (err) { /* ignore */ } }
   }
 
   // ------------------------------------------------------------------ frame loop
@@ -719,7 +1192,7 @@
 
   // ------------------------------------------------------------------ splash and boot
 
-  let splashLogo = -1, progress = 0, splashText = 'MUSTERING THE REGIMENT';
+  let splashLogo = -1, progress = 0, splashText = 'MUSTERING TROOPS';
 
   function drawSplash() {
     resetTransform();
@@ -765,6 +1238,12 @@
       list = [];
     }
     register(list);
+    try {
+      const r = await fetch('images.json');
+      imageSizes = await r.json();
+    } catch (err) {
+      IC.log('image manifest failed: ' + err);
+    }
     const fontsDone = loadFonts();
     splashLogo = IC.img('title_logo');
     if (splashLogo >= 0) await loadSprite(splashLogo);

@@ -1,0 +1,9 @@
+# crown: written by tools/assetgen/painted_borders.py
+chunk 256 origin -64 -64
+11 5
+1 7
+0 8
+1 8
+0 9
+1 9
+2 20
