@@ -368,6 +368,34 @@
     return hd;
   };
   IC.bakeEnd = function () { if (targets.length) popTarget(); };
+
+  // ---- a picture made from pixels (Gfx.picture: a Codex model's painting from each angle, the menu's CRT mask, the
+  // opening's snowflake, the glows). ARGB, row by row. One of a name is kept: made again, it takes the place of the
+  // last (the Codex's model is painted anew at every angle it's turned to).
+  const pictures = {};
+  IC.picture = function (name, w, h, px, pw, ph) {
+    if (!(pw > 0 && ph > 0) || pw * ph > 4096 * 4096) return -1;
+    const c = document.createElement('canvas');
+    c.width = pw;
+    c.height = ph;
+    const g = c.getContext('2d');
+    const id = g.createImageData(pw, ph), d = id.data;
+    for (let i = 0, o = 0, n = pw * ph; i < n; i++, o += 4) {
+      const v = px[i];
+      d[o] = (v >> 16) & 255; d[o + 1] = (v >> 8) & 255; d[o + 2] = v & 255; d[o + 3] = (v >>> 24) & 255;
+    }
+    g.putImageData(id, 0, 0);
+    let hd = pictures[name];
+    if (hd === undefined) {
+      hd = pictures[name] = sprites.length;
+      sprites.push({ name: name, w: w, h: h, img: c, fb: -1, tints: null });
+    } else {
+      const s = sprites[hd];
+      if (IC.dropPicture) IC.dropPicture(s.img);                 // (its texture, on WebGL)
+      s.w = w; s.h = h; s.img = c; s.tints = null; s.shades = null; s.freed = false;
+    }
+    return hd;
+  };
   const layerCanvases = [];
   IC.layerBegin = function (alpha) {
     const depth = targets.length;
@@ -1469,6 +1497,7 @@ void main() {
       dropUpload(r);
     }
   }
+  IC.dropPicture = function (im) { if (im && im.__ic) dropUpload(im.__ic); };
   function dropUpload(r) {
     if (!live.delete(r)) return;
     texBytes -= r.bytes;
