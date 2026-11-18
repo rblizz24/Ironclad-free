@@ -94,7 +94,7 @@
       const s = document.createElement('script');
       s.onload = start;
       s.onerror = function () { fail('The game code (classes.js) did not load.'); };
-      s.src = 'classes.js';
+      s.src = 'classes.js' + (window.IC_BUILD ? '?v=' + window.IC_BUILD : '');
       document.body.appendChild(s);
       return;
     }

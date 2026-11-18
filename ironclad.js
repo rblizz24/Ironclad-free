@@ -8,6 +8,9 @@
 'use strict';
 (function () {
   const IC = (window.IC = {});
+  // the build's stamp on every file asked for (assemble.py sets IC_BUILD), so a new build never shows an older
+  // build's pictures, models or sounds from the browser's cache
+  const V = window.IC_BUILD ? '?v=' + window.IC_BUILD : '';
   const BASE_W = 540, BASE_H = 960;
   const MAX_ASPECT = 0.75;          // wider screens get a portrait column, like a phone or tablet
   const MAX_BACKING_W = 1280;       // sprites are drawn for 1080 px across; more pixels only cost fill rate
@@ -263,7 +266,7 @@
       im.decoding = 'async';
       im.onload = function () { if (!s.freed) s.img = im; resolve(true); };
       im.onerror = function () { IC.log('missing picture ' + s.name); resolve(false); };
-      im.src = s.src || ('assets/sprites/' + s.name + '.png');
+      im.src = s.src || ('assets/sprites/' + s.name + '.png' + V);
     });
   }
 
@@ -285,7 +288,7 @@
     if (!wh) return -1;
     const h = sprites.length;
     const k = ppu > 0 ? ppu : 1;
-    sprites.push({ name: path, src: 'assets/' + path, pw: wh[0], ph: wh[1], w: wh[0] / k, h: wh[1] / k,
+    sprites.push({ name: path, src: 'assets/' + path + V, pw: wh[0], ph: wh[1], w: wh[0] / k, h: wh[1] / k,
                    img: null, fb: -1, tints: null, freed: false });
     imageQueue.push(h);
     pumpImages();
@@ -299,7 +302,7 @@
   function getSync(path, binary) {
     try {
       const x = new XMLHttpRequest();
-      x.open('GET', 'assets/' + path, false);
+      x.open('GET', 'assets/' + path + V, false);
       if (binary) x.overrideMimeType('text/plain; charset=x-user-defined');
       x.send(null);
       if (x.status !== 200 && x.status !== 0) return null;
@@ -1075,7 +1078,7 @@
     for (const file of files) {
       const p = { file: file, data: null, buf: null, src: null, gain: null, level: 1, decoding: false, failed: false, pend: null };
       v.parts.push(p);
-      fetch('assets/music/' + file + '.mp3')
+      fetch('assets/music/' + file + '.mp3' + V)
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
         .then(function (data) { if (v.dead) return; p.data = data; decodePart(v, p); })
         .catch(function (err) { p.failed = true; IC.log('music ' + file + ': ' + err); });
@@ -2377,7 +2380,7 @@ void main() {
     installInput();
     let list;
     try {
-      const r = await fetch('sprites.json');
+      const r = await fetch('sprites.json' + V);
       list = await r.json();
     } catch (err) {
       IC.log('sprite manifest failed: ' + err);
@@ -2385,7 +2388,7 @@ void main() {
     }
     register(list);
     try {
-      const r = await fetch('images.json');
+      const r = await fetch('images.json' + V);
       imageSizes = await r.json();
     } catch (err) {
       IC.log('image manifest failed: ' + err);
