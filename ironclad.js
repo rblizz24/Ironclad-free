@@ -1,7 +1,9 @@
 /*
  * Ironclad browser runtime. The game itself is Java compiled to JavaScript by TeaVM (classes.js); this file
- * is everything the Android layer did: a renderer with the same conventions as AndroidGfx (WebGL 2, or Canvas 2D
- * where WebGL 2 is missing: see "WebGL renderer"), sprite
+ * is everything the Android layer did. Frames are drawn as on the phone, by its GPU renderer (core.gl.GlGfx, in
+ * classes.js) on a WebGL 2 context this page makes for it (webgl.js: "the phone's GPU renderer" below); this file's
+ * Canvas 2D renderer still draws the game's bakes and the splash. Where WebGL 2 is missing (or with ?old / ?canvas)
+ * the renderers here draw everything: the browser's own (WebGL 2: see "WebGL renderer", ?old) or Canvas 2D. Sprite
  * and font loading behind a splash, pointer input, localStorage saves, and the synth streamed through Web
  * Audio. The Java side reaches it through the global IC object (see web/src/.../JS.java).
  */
@@ -48,6 +50,12 @@
     canvas.style.height = H + 'px';
     canvas.width = Math.round(gw * backing);
     canvas.height = Math.round(H * backing);
+    if (splashCanvas) {
+      splashCanvas.style.width = canvas.style.width;
+      splashCanvas.style.height = canvas.style.height;
+      splashCanvas.width = canvas.width;
+      splashCanvas.height = canvas.height;
+    }
     initContext();
     viewVersion++;
   }
@@ -242,6 +250,16 @@
   IC.imgH = function (h) { return sprites[h].h; };
   IC.baseCount = function () { return baseNames.length; };
   IC.baseName = function (i) { return baseNames[i]; };
+  /** For the GPU renderer: 0 a sprite with no picture yet, 1 a paint variant still on its way (its base scheme stands
+   *  in), 2 its own picture. */
+  IC.spriteState = function (h) {
+    const s = sprites[h];
+    if (!s || s.freed) return 0;
+    if (s.img) return 2;
+    return s.fb >= 0 && sprites[s.fb].img ? 1 : 0;
+  };
+  /** The picture the GPU renderer uploads for a sprite (its stand-in while a paint variant is on its way). */
+  IC.spriteImg = function (h) { const s = sprites[h]; return s && !s.freed ? imageOf(h) : null; };
 
   function register(list) {
     for (const [name, pw, ph] of list) {
@@ -329,6 +347,7 @@
     return b.length;
   };
   IC.byteAt = function (i) { return bytes[i]; };
+  IC.bytesInto = function (b) { new Uint8Array(b.buffer, b.byteOffset, b.length).set(bytes.subarray(0, b.length)); };
 
   // ---- drawing into a picture of its own (Gfx.bake) or a layer laid over the screen at an opacity (Gfx.layer)
   const targets = [];
@@ -396,6 +415,37 @@
     }
     return hd;
   };
+  // ---- a picture's pixels (Gfx.pixels: a model's atlas packs its pictures from them; the water reads its tile), read
+  // on a canvas kept for reading back, then handed over ARGB into the game's array
+  let pxCanvas = null, pxCtx = null, pxData = null;
+  IC.pixelsBegin = function (h) {
+    const s = sprites[h];
+    if (!s || s.freed || !s.img) return -1;
+    const im = s.img, w = im.naturalWidth || im.width, hh = im.naturalHeight || im.height;
+    if (!(w > 0 && hh > 0) || w > 4096 || hh > 4096) return -1;
+    if (!pxCanvas) { pxCanvas = document.createElement('canvas'); pxCtx = null; }
+    if (pxCanvas.width < w || pxCanvas.height < hh) {
+      pxCanvas.width = Math.max(pxCanvas.width, w);
+      pxCanvas.height = Math.max(pxCanvas.height, hh);
+      pxCtx = null;
+    }
+    if (!pxCtx) pxCtx = pxCanvas.getContext('2d', { willReadFrequently: true });
+    pxCtx.setTransform(1, 0, 0, 1, 0, 0);
+    pxCtx.globalAlpha = 1;
+    pxCtx.globalCompositeOperation = 'copy';
+    pxCtx.drawImage(im, 0, 0);
+    pxCtx.globalCompositeOperation = 'source-over';
+    pxData = pxCtx.getImageData(0, 0, w, hh).data;
+    return (w << 16) | hh;
+  };
+  IC.pixelsInto = function (out) {
+    const d = pxData;
+    if (!d) return;
+    const n = Math.min(out.length, d.length >> 2);
+    for (let i = 0, k = 0; i < n; i++, k += 4) out[i] = (d[k + 3] << 24) | (d[k] << 16) | (d[k + 1] << 8) | d[k + 2];
+    pxData = null;
+  };
+
   const layerCanvases = [];
   IC.layerBegin = function (alpha) {
     const depth = targets.length;
@@ -716,6 +766,7 @@
     const s = px + 'px IC' + f + ',' + FONT_FALLBACK[f];
     if (s !== lastFont) { ctx.font = s; lastFont = s; }
   }
+  IC.fontCss = function (f, px) { return px + 'px IC' + f + ',' + FONT_FALLBACK[f]; };
   const ALIGN = ['left', 'center', 'right'];
   IC.text = function (s, x, y, f, size, c, align) {
     if ((c >>> 24) === 0) return;
@@ -940,6 +991,16 @@
       if (fifoLen >= fifo.length) return;
     }
     fifo[fifoStart + fifoLen++] = v / 32768;
+  };
+
+  IC.apushAll = function (a, n) {
+    if (fifoStart + fifoLen + n > fifo.length) {
+      fifo.copyWithin(0, fifoStart, fifoStart + fifoLen);
+      fifoStart = 0;
+    }
+    const k = Math.min(n, fifo.length - fifoLen), at = fifoStart + fifoLen;
+    for (let i = 0; i < k; i++) fifo[at + i] = a[i] / 32768;
+    fifoLen += k;
   };
 
   function ensure(n) {
@@ -1228,7 +1289,7 @@
   const gtargets = [];                    // the targets bake, layer and the light map put in front of it
   let recording = null;                   // a bake's calls, kept to draw it again if the GPU drops its pictures
   const glStats = { draws: 0, uploads: 0, atlasResets: 0, mb: 0 };
-  IC.renderer = function () { return gl ? 'webgl2' : 'canvas'; };
+  IC.renderer = function () { return gpu ? 'gpu' : gl ? 'webgl2' : 'canvas'; };
   // (the canvas renderer has no warp: the battlefield is drawn flat and the units scaled by the ground instead)
   IC.warpBegin = function () { return false; };
   IC.warpEnd = function () { };
@@ -2342,6 +2403,53 @@ void main() {
     return true;
   }
 
+  // ------------------------------------------------------------------ the phone's GPU renderer
+  // core.gl.GlGfx draws the frames on a WebGL 2 context made here for it (webgl.js hands it the calls). The splash,
+  // drawn before the game starts, goes on a canvas of its own laid over the game's; the game's bakes on canvases of
+  // their own, by this file's Canvas 2D renderer (ctx is theirs while one is drawn, and null otherwise).
+  let gpu = null, gpuLostNow = false, gpuRestored = false, splashCanvas = null;
+  function makeGpu() {
+    if (!window.ICGL) return null;
+    let c = null;
+    try {
+      c = canvas.getContext('webgl2', { alpha: false, antialias: false, depth: true, stencil: true,
+        premultipliedAlpha: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' });
+    } catch (err) { c = null; }
+    if (!c) return null;
+    try {
+      ICGL.attach(c);
+    } catch (err) {
+      IC.log('GPU renderer setup failed: ' + err);
+      return null;
+    }
+    canvas.addEventListener('webglcontextlost', function (e) {
+      if (!gpu) return;
+      e.preventDefault();
+      gpuLostNow = true;
+      IC.log('WebGL context lost');
+    });
+    canvas.addEventListener('webglcontextrestored', function () {
+      if (!gpu) return;
+      ICGL.attach(c);
+      gpuLostNow = false;
+      gpuRestored = true;
+      IC.log('WebGL context restored');
+    });
+    return c;
+  }
+  IC.gpuOn = function () { return !!gpu; };
+  IC.gpuLost = function () { return gpuLostNow; };
+  IC.gpuTakeRestored = function () { const r = gpuRestored; gpuRestored = false; return r; };
+  IC.canvasW = function () { return canvas.width; };
+  IC.canvasH = function () { return canvas.height; };
+  /** GlGfx gave up (a shader this browser won't take): the browser's own WebGL renderer, on the same context. */
+  IC.gpuFallback = function (why) {
+    IC.log('GPU renderer off: ' + why);
+    gpu = null;
+    if (!installGL()) IC.log('no renderer left to draw with');
+    IC.log('renderer: ' + IC.renderer());
+  };
+
   // ------------------------------------------------------------------ frame loop
 
   let frameFn = null, lastT = 0, frames = 0, frameErrors = 0;
@@ -2351,8 +2459,15 @@ void main() {
   };
   IC.frameCount = function () { return frames; };
 
+  // On a screen refreshed faster than about 100 times a second (a phone at 120 Hz), every other refresh is let pass:
+  // the game runs at the 60 a second it runs at on the phone, evenly, rather than at whatever part of 120 a frame's
+  // work allows (frames then come late by turns, which reads as stutter). ?uncapped draws at every refresh.
+  const MIN_GAP = 10;                     // ms; 120 Hz refreshes come every 8.3
+  let uncapped = null;
   function tick(t) {
     requestAnimationFrame(tick);
+    if (uncapped === null) uncapped = IC.query('uncapped');
+    if (lastT !== 0 && t - lastT < MIN_GAP && !uncapped) return;
     const dt = lastT === 0 ? 1 / 60 : Math.min(0.25, (t - lastT) / 1000);
     lastT = t;
     resetTransform();
@@ -2389,6 +2504,11 @@ void main() {
 
   IC.ready = function () {
     gameReady = true;
+    if (splashCanvas) {
+      splashCanvas.remove();
+      splashCanvas = null;
+      ctx = null;
+    }
     document.body.classList.add('ready');
     IC.log('ready: ' + sprites.length + ' sprites, view ' + Math.round(logicalW) + 'x' + Math.round(logicalH));
     // paint variants trickle in after start; until each arrives it draws as its base scheme
@@ -2401,8 +2521,18 @@ void main() {
     if (booted) return;
     booted = true;
     canvas = document.getElementById('game');
-    // WebGL 2 where the browser has it (?canvas: the old Canvas 2D renderer, also the fallback)
-    if (IC.query('canvas') || !installGL()) ctx = canvas.getContext('2d', { alpha: false });
+    // the phone's GPU renderer on WebGL 2 where the browser has it; ?old: the browser's own WebGL renderer, ?canvas:
+    // the Canvas 2D one (also the fallbacks, in that order)
+    if (!IC.query('old') && !IC.query('canvas')) gpu = makeGpu();
+    if (gpu) {
+      splashCanvas = document.createElement('canvas');
+      splashCanvas.id = 'splash';
+      splashCanvas.style.cssText = 'position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:5;pointer-events:none;';
+      document.body.appendChild(splashCanvas);
+      ctx = splashCanvas.getContext('2d', { alpha: false });
+    } else if (IC.query('canvas') || !installGL()) {
+      ctx = canvas.getContext('2d', { alpha: false });
+    }
     IC.log('renderer: ' + IC.renderer());
     layout();
     window.addEventListener('resize', layout);
