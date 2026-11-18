@@ -36,6 +36,9 @@ beacon 113 33
 reclaim 10 76
 reclaim 117 147
 reclaim 113 33
+find 10 76
+find 115 75
+find 113 33
 prop x_bogged 43.02 110.38 0
 prop x_duckboard 37.90 100.30 0
 prop x_duckboard 40.70 100.30 0

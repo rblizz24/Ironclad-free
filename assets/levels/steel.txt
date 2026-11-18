@@ -106,9 +106,14 @@ prop x_sigmast 70.00 60.00 0
 prop x_sigcabin 73.00 110.00 0
 prop d_turntable 31.50 39.50 0
 prop loco 31.50 39.50 0
-prop x_roundhouse 32.00 27.50 0
-prop x_roundhouse 19.50 40.00 270
-prop x_roundhouse 32.00 52.50 180
+prop x_rhbay 31.50 39.50 95
+prop x_rhbay 31.50 39.50 120
+prop x_rhbay 31.50 39.50 145
+prop x_rhbay 31.50 39.50 170
+prop x_rhbay 31.50 39.50 195
+prop x_rhbay 31.50 39.50 220
+prop x_rhbay 31.50 39.50 245
+prop x_rhbay 31.50 39.50 270
 prop watertower 46.00 26.00 0
 prop coal 47.00 49.00 40
 prop loco 73.50 32.00 90
@@ -178,6 +183,51 @@ prop drum 28.60 97.10 0
 prop x_lorry 19.00 81.00 90
 prop railstack 18.00 62.00 0
 prop sleepers 18.00 101.00 0
+prop x_r_wheels 41.10 33.40 0
+prop x_r_wheels 43.00 33.40 0
+prop x_r_wheels 44.90 33.40 0
+prop x_r_bogie 41.10 36.30 0
+prop x_r_bogie 42.90 36.30 0
+prop x_r_oil 37.50 48.50 0
+prop x_r_levers 37.50 46.30 0
+prop x_r_bench 81.50 29.50 90
+prop x_r_bench 81.50 41.00 90
+prop x_r_bench 96.00 29.50 90
+prop x_r_bench 100.20 41.00 90
+prop x_r_wheels 89.00 29.80 0
+prop x_r_wheels 89.00 31.20 0
+prop x_r_bogie 89.00 37.70 0
+prop x_r_bogie 89.00 39.30 0
+prop x_r_oil 89.00 34.60 0
+prop x_r_bench 58.00 145.00 90
+prop x_r_bench 58.00 147.00 90
+prop x_r_bench 58.00 149.00 90
+prop x_r_bench 71.50 145.00 90
+prop x_r_bench 71.50 147.00 90
+prop x_r_bench 71.50 149.00 90
+prop x_r_trolley 45.90 118.20 0
+prop x_r_trolley 47.50 118.20 0
+prop x_r_trolley 80.50 130.50 0
+prop x_r_trolley 28.85 150.60 0
+prop x_r_trolley 30.35 150.60 0
+prop x_r_parcels 26.90 148.50 0
+prop x_r_parcels 28.30 148.50 0
+prop x_r_parcels 29.70 148.50 0
+prop x_r_trolley 98.25 150.60 0
+prop x_r_trolley 99.75 150.60 0
+prop x_r_parcels 96.90 148.50 0
+prop x_r_parcels 98.30 148.50 0
+prop x_r_parcels 99.70 148.50 0
+prop x_r_levers 70.00 112.50 0
+prop x_r_trolley 28.60 72.40 90
+prop x_r_trolley 28.60 73.80 90
+prop x_r_trolley 28.60 75.20 90
+prop x_r_parcels 28.60 77.95 0
+prop x_r_parcels 28.60 79.25 0
+prop x_r_oil 28.80 90.00 0
+prop x_r_oil 28.80 91.00 0
+prop x_r_oil 100.50 66.00 0
+prop x_r_wheels 97.50 68.60 0
 start 63 146
 evac 63 6
 boss 63 80
@@ -194,6 +244,14 @@ beacon 19 25
 find 105 100
 find 29 146
 find 97 146
+prop buffer 73.50 25.85 270
+prop buffer 78.50 25.85 270
+prop buffer 83.50 25.85 270
+prop buffer 93.50 25.85 270
+prop buffer 97.50 25.85 270
+prop buffer 101.50 25.85 270
+prop buffer 107.50 61.85 270
+prop buffer 32.50 61.85 270
 grid
 ################################################################################################################################
 ################################################################################################################################
